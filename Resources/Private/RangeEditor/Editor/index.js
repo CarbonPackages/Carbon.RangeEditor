@@ -17,6 +17,7 @@ const defaultProps = {
         minLabel: null,
         maxLabel: null,
         disabled: false,
+        valueLabelsFile: "",
         valueLabels: {},
     },
 };
@@ -48,15 +49,38 @@ function Editor(props, second) {
     };
 
     const options = { ...defaultProps.options, ...props.options };
-    const { value, highlight } = props;
+    const { value, highlight, i18nRegistry } = props;
     const valueAsString = value === 0 ? "0" : value || "";
     // Calculate the width of the input field based on the length of the min, max and step values
     const numLength = (value) => value.toString().length;
     const additionalStepLength = numLength(options.step) - 1;
     const styleWidth = Math.max(numLength(options.min), numLength(options.max)) + additionalStepLength + "ch";
-    const valueLabels = options.valueLabels;
 
+    const { valueLabels, valueLabelsFile } = options;
     const showMiddle = !!(value != options.min && value != options.max);
+    const getValueLabel = (value) => {
+        if (valueLabels && valueLabels[value]) {
+            return valueLabels[value];
+        }
+        if (valueLabelsFile) {
+            return `${valueLabelsFile}:${value}`;
+        }
+        return null;
+    };
+
+    const getLabel = (value) => {
+        if (value == options.min) {
+            const label = options.minLabel || getValueLabel(options.min) || options.min + options.unit;
+            return i18nRegistry.translate(label);
+        }
+        if (value == options.max) {
+            const label = options.maxLabel || getValueLabel(options.max) || options.max + options.unit;
+            return i18nRegistry.translate(label);
+        }
+        return i18nRegistry.translate(getValueLabel(value));
+    };
+
+    const currentLabel = getLabel(value);
 
     return (
         <div className={clsx(style.editor, options.disabled && style.editorDisabled)}>
@@ -73,23 +97,19 @@ function Editor(props, second) {
             <div className={style.editorValue}>
                 <button
                     type="button"
-                    title={props.i18nRegistry.translate("Neos.Neos.Ui:Main:rangeEditorMinimum")}
+                    title={i18nRegistry.translate("Neos.Neos.Ui:Main:rangeEditorMinimum")}
                     onClick={() => changeValue(options.min)}
                     style={{ opacity: options.min == value ? 1 : 0.7 }}
                     disabled={options.disabled}
                 >
-                    {props.i18nRegistry.translate(
-                        options.minLabel || valueLabels[options.min] || options.min + options.unit,
-                    )}
+                    {getLabel(options.min)}
                 </button>
                 {!showMiddle && <span>&nbsp;</span>}
-                {valueLabels[value] && showMiddle && (
-                    <span className={style.valueLabel}>{props.i18nRegistry.translate(valueLabels[value])}</span>
-                )}
-                {!valueLabels[value] && showMiddle && (
+                {currentLabel && showMiddle && <span className={style.valueLabel}>{currentLabel}</span>}
+                {!currentLabel && showMiddle && (
                     <span>
                         <input
-                            title={props.i18nRegistry.translate("Neos.Neos.Ui:Main:rangeEditorCurrentValue")}
+                            title={i18nRegistry.translate("Neos.Neos.Ui:Main:rangeEditorCurrentValue")}
                             type="text"
                             onKeyPress={this.onKeyPress}
                             onChange={this.handleChange}
@@ -102,14 +122,12 @@ function Editor(props, second) {
                 )}
                 <button
                     type="button"
-                    title={props.i18nRegistry.translate("Neos.Neos.Ui:Main:rangeEditorMaximum")}
+                    title={i18nRegistry.translate("Neos.Neos.Ui:Main:rangeEditorMaximum")}
                     onClick={() => changeValue(options.max)}
                     style={{ opacity: options.max == value ? 1 : 0.7 }}
                     disabled={options.disabled}
                 >
-                    {props.i18nRegistry.translate(
-                        options.maxLabel || valueLabels[options.max] || options.max + options.unit,
-                    )}
+                    {getLabel(options.max)}
                 </button>
             </div>
         </div>
