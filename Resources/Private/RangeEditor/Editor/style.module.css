@@ -1,0 +1,101 @@
+.slider {
+    appearance: none;
+    background: var(--colors-ContrastNeutral from global);
+    cursor: pointer;
+    height: 25px;
+    outline: none;
+    width: 100%;
+    border-radius: 2px;
+
+    &::-webkit-slider-thumb {
+        appearance: none;
+        background: var(--colors-PrimaryBlue from global);
+        border-radius: 5px;
+        box-shadow: 0 0 0 #000, 0 0 0 #0d0d0d;
+        cursor: pointer;
+        height: 20px;
+        opacity: .7;
+        width: 20px;
+        border: none;
+
+        &:hover,
+        &:focus {
+            background: var(--colors-PrimaryBlueHover from global);
+        }
+    }
+
+    &::-moz-range-thumb {
+        appearance: none;
+        background: var(--colors-PrimaryBlue from global);
+        border-radius: 5px;
+        box-shadow: 0 0 0 #000, 0 0 0 #0d0d0d;
+        cursor: pointer;
+        height: 25px;
+        opacity: .7;
+        width: 25px;
+        border: none;
+
+        &:hover,
+        &:focus {
+            background: var(--colors-PrimaryBlueHover from global);
+        }
+    }
+}
+
+.sliderHighlight {
+    box-shadow: 0 0 0 2px var(--colors-Warn from global);
+}
+
+.editorValue {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    & button {
+        cursor: pointer;
+        background: none;
+        padding: 0;
+        border: 0;
+        color: inherit;
+    }
+
+    & input {
+        appearance: none;
+        background: var(--colors-ContrastNeutral from global);
+        border: 0;
+        color: #fff;
+        display: inline-block;
+        padding: 0 .3rem;
+        text-align: right;
+        box-sizing: content-box;
+        margin-right: var(--spacing-Quarter from global);
+
+        &:focus {
+            outline: 1px solid var(--colors-PrimaryBlue from global);
+        }
+    }
+}
+
+.valueLabel {
+    user-select: none;
+}
+
+.editorDisabled {
+    opacity: .65;
+
+    & input[disabled],
+    & button:disabled {
+        cursor: not-allowed;
+    }
+
+    & .slider::-webkit-slider-thumb {
+        pointer-events: none;
+        background: var(--colors-ContrastBright from global);
+    }
+
+    & .slider::-moz-range-thumb {
+        pointer-events: none;
+        background: var(--colors-ContrastBright from global);
+    }
+}

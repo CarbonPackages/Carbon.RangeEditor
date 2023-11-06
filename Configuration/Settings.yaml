@@ -1,0 +1,10 @@
+Neos:
+  Neos:
+    Ui:
+      resources:
+        javascript:
+          Carbon.RangeEditor:Plugin:
+            resource: resource://Carbon.RangeEditor/Public/Plugin.js
+        stylesheets:
+          Carbon.RangeEditor:Plugin:
+            resource: resource://Carbon.RangeEditor/Public/Plugin.css

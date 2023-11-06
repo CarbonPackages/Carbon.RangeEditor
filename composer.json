@@ -1,0 +1,30 @@
+{
+    "name": "carbon/rangeeditor",
+    "type": "neos-carbon",
+    "description": "Enhanced Range Inspector Editor for Neos CMS",
+    "license": "GPL-3.0",
+    "keywords": [
+        "flow",
+        "neos",
+        "fusion",
+        "editor",
+        "carbon",
+        "range"
+    ],
+    "require": {
+        "neos/neos": "^7.3 || ^8.0 || ^9.0"
+    },
+    "authors": [
+        {
+            "name": "Jon Uhlmann",
+            "email": "hello@uhlmann.pro",
+            "homepage": "https://www.uhlmann.pro",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Carbon\\RangeEditor\\": "Classes"
+        }
+    }
+}
