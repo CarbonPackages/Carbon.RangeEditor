@@ -57,7 +57,7 @@ function Editor(props, second) {
     const styleWidth = Math.max(numLength(options.min), numLength(options.max)) + additionalStepLength + "ch";
 
     const { valueLabels, valueLabelsFile } = options;
-    const showMiddle = !!(value != options.min && value != options.max);
+    const showMiddle = between(value, options.min, options.max);
     const getValueLabel = (value) => {
         if (valueLabels && valueLabels[value]) {
             return valueLabels[value];
@@ -69,11 +69,11 @@ function Editor(props, second) {
     };
 
     const getLabel = (value) => {
-        if (value == options.min) {
+        if (value <= options.min) {
             const label = options.minLabel || getValueLabel(options.min) || options.min + options.unit;
             return i18nRegistry.translate(label);
         }
-        if (value == options.max) {
+        if (value >= options.max) {
             const label = options.maxLabel || getValueLabel(options.max) || options.max + options.unit;
             return i18nRegistry.translate(label);
         }
@@ -99,7 +99,7 @@ function Editor(props, second) {
                     type="button"
                     title={i18nRegistry.translate("Neos.Neos.Ui:Main:rangeEditorMinimum")}
                     onClick={() => changeValue(options.min)}
-                    style={{ opacity: options.min == value ? 1 : 0.7 }}
+                    style={{ opacity: options.min >= value ? 1 : 0.7 }}
                     disabled={options.disabled}
                 >
                     {getLabel(options.min)}
@@ -111,8 +111,8 @@ function Editor(props, second) {
                         <input
                             title={i18nRegistry.translate("Neos.Neos.Ui:Main:rangeEditorCurrentValue")}
                             type="text"
-                            onKeyPress={this.onKeyPress}
-                            onChange={this.handleChange}
+                            onKeyPress={onKeyPress}
+                            onChange={handleChange}
                             value={valueAsString}
                             style={{ width: styleWidth }}
                             disabled={options.disabled}
@@ -124,7 +124,7 @@ function Editor(props, second) {
                     type="button"
                     title={i18nRegistry.translate("Neos.Neos.Ui:Main:rangeEditorMaximum")}
                     onClick={() => changeValue(options.max)}
-                    style={{ opacity: options.max == value ? 1 : 0.7 }}
+                    style={{ opacity: options.max <= value ? 1 : 0.7 }}
                     disabled={options.disabled}
                 >
                     {getLabel(options.max)}
@@ -140,6 +140,10 @@ function useForceUpdate() {
     return () => setValue((value) => value + 1); // update state to force render
     // A function that increment 👆🏻 the previous state like here
     // is better than directly setting `setValue(value + 1)`
+}
+
+function between(x, min, max) {
+    return x > min && x < max;
 }
 
 export default neosifier(Editor);
