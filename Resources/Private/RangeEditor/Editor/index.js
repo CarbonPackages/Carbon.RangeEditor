@@ -55,6 +55,7 @@ function Editor(props, second) {
     const numLength = (value) => value.toString().length;
     const additionalStepLength = numLength(options.step) - 1;
     const styleWidth = Math.max(numLength(options.min), numLength(options.max)) + additionalStepLength + "ch";
+    const unit = options.unit ? i18nRegistry.translate(options.unit) : "";
 
     const { valueLabels, valueLabelsFile } = options;
     const showMiddle = between(value, options.min, options.max);
@@ -70,11 +71,11 @@ function Editor(props, second) {
 
     const getLabel = (value) => {
         if (value <= options.min) {
-            const label = options.minLabel || getValueLabel(options.min) || options.min + options.unit;
+            const label = options.minLabel || getValueLabel(options.min) || options.min + unit;
             return i18nRegistry.translate(label);
         }
         if (value >= options.max) {
-            const label = options.maxLabel || getValueLabel(options.max) || options.max + options.unit;
+            const label = options.maxLabel || getValueLabel(options.max) || options.max + unit;
             return i18nRegistry.translate(label);
         }
         return i18nRegistry.translate(getValueLabel(value));
@@ -117,7 +118,7 @@ function Editor(props, second) {
                             style={{ width: styleWidth }}
                             disabled={options.disabled}
                         />
-                        {options.unit}
+                        {unit}
                     </span>
                 )}
                 <button
