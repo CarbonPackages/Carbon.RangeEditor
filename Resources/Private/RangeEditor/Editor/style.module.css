@@ -77,6 +77,10 @@
     }
 }
 
+.editorValueSingle {
+    justify-content: center;
+}
+
 .valueLabel {
     user-select: none;
 }

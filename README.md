@@ -19,6 +19,8 @@ Example:
         inspector:
           editor: 'Carbon.RangeEditor/Editor'
           editorOptions:
+            showMinLabel: true
+            showMaxLabel: true
             minLabel: null
             maxLabel: null
             min: 1

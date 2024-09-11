@@ -14,6 +14,8 @@ const defaultProps = {
         max: 100,
         step: 1,
         unit: "",
+        showMinLabel: true,
+        showMaxLabel: true,
         minLabel: null,
         maxLabel: null,
         disabled: false,
@@ -22,7 +24,7 @@ const defaultProps = {
     },
 };
 
-function Editor(props, second) {
+function Editor(props) {
     const forceUpdate = useForceUpdate();
 
     const handleChange = (event) => {
@@ -58,7 +60,13 @@ function Editor(props, second) {
     const unit = options.unit ? i18nRegistry.translate(options.unit) : "";
 
     const { valueLabels, valueLabelsFile } = options;
-    const showMiddle = between(value, options.min, options.max);
+    let showMiddle = between(value, options.min, options.max);
+    if (!options.showMinLabel) {
+        showMiddle = showMiddle || value === options.min;
+    }
+    if (!options.showMaxLabel) {
+        showMiddle = showMiddle || value === options.max;
+    }
     const getValueLabel = (value) => {
         if (valueLabels && valueLabels[value]) {
             return valueLabels[value];
@@ -95,16 +103,23 @@ function Editor(props, second) {
                 onChange={handleChange}
                 disabled={options.disabled}
             />
-            <div className={style.editorValue}>
-                <button
-                    type="button"
-                    title={i18nRegistry.translate("Neos.Neos.Ui:Main:rangeEditorMinimum")}
-                    onClick={() => changeValue(options.min)}
-                    style={{ opacity: options.min >= value ? 1 : 0.7 }}
-                    disabled={options.disabled}
-                >
-                    {getLabel(options.min)}
-                </button>
+            <div
+                className={clsx(
+                    style.editorValue,
+                    !options.showMinLabel && !options.showMaxLabel && style.editorValueSingle,
+                )}
+            >
+                {options.showMinLabel && (
+                    <button
+                        type="button"
+                        title={i18nRegistry.translate("Neos.Neos.Ui:Main:rangeEditorMinimum")}
+                        onClick={() => changeValue(options.min)}
+                        style={{ opacity: options.min >= value ? 1 : 0.7 }}
+                        disabled={options.disabled}
+                    >
+                        {getLabel(options.min)}
+                    </button>
+                )}
                 {!showMiddle && <span>&nbsp;</span>}
                 {currentLabel && showMiddle && <span className={style.valueLabel}>{currentLabel}</span>}
                 {!currentLabel && showMiddle && (
@@ -121,15 +136,17 @@ function Editor(props, second) {
                         {unit}
                     </span>
                 )}
-                <button
-                    type="button"
-                    title={i18nRegistry.translate("Neos.Neos.Ui:Main:rangeEditorMaximum")}
-                    onClick={() => changeValue(options.max)}
-                    style={{ opacity: options.max <= value ? 1 : 0.7 }}
-                    disabled={options.disabled}
-                >
-                    {getLabel(options.max)}
-                </button>
+                {options.showMaxLabel && (
+                    <button
+                        type="button"
+                        title={i18nRegistry.translate("Neos.Neos.Ui:Main:rangeEditorMaximum")}
+                        onClick={() => changeValue(options.max)}
+                        style={{ opacity: options.max <= value ? 1 : 0.7 }}
+                        disabled={options.disabled}
+                    >
+                        {getLabel(options.max)}
+                    </button>
+                )}
             </div>
         </div>
     );
@@ -137,7 +154,7 @@ function Editor(props, second) {
 
 //create your forceUpdate hook
 function useForceUpdate() {
-    const [value, setValue] = useState(0); // integer state
+    const [, setValue] = useState(0); // integer state
     return () => setValue((value) => value + 1); // update state to force render
     // A function that increment 👆🏻 the previous state like here
     // is better than directly setting `setValue(value + 1)`
