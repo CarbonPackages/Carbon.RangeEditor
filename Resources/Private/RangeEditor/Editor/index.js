@@ -59,7 +59,7 @@ function Editor(props) {
     const styleWidth = Math.max(numLength(options.min), numLength(options.max)) + additionalStepLength + "ch";
     const unit = options.unit ? i18nRegistry.translate(options.unit) : "";
 
-    const { valueLabels, valueLabelsFile } = options;
+    const { valueLabels, valueLabelsFile, showInput } = options;
     let showMiddle = between(value, options.min, options.max);
     if (!options.showMinLabel) {
         showMiddle = showMiddle || value === options.min;
@@ -124,15 +124,19 @@ function Editor(props) {
                 {currentLabel && showMiddle && <span className={style.valueLabel}>{currentLabel}</span>}
                 {!currentLabel && showMiddle && (
                     <span>
-                        <input
-                            title={i18nRegistry.translate("Neos.Neos.Ui:Main:rangeEditorCurrentValue")}
-                            type="text"
-                            onKeyPress={onKeyPress}
-                            onChange={handleChange}
-                            value={valueAsString}
-                            style={{ width: styleWidth }}
-                            disabled={options.disabled}
-                        />
+                        {showInput ? (
+                            <input
+                                title={i18nRegistry.translate("Neos.Neos.Ui:Main:rangeEditorCurrentValue")}
+                                type="text"
+                                onKeyPress={onKeyPress}
+                                onChange={handleChange}
+                                value={valueAsString}
+                                style={{ width: styleWidth }}
+                                disabled={options.disabled}
+                            />
+                        ) : (
+                            valueAsString
+                        )}
                         {unit}
                     </span>
                 )}

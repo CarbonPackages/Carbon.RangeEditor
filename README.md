@@ -23,6 +23,7 @@ Example:
             showMaxLabel: true
             minLabel: null
             maxLabel: null
+            showInput: true
             min: 1
             max: 6
             step: 1
