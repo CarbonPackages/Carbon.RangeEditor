@@ -9,9 +9,9 @@
     "dev": "node build.mjs"
   },
   "devDependencies": {
-    "@neos-project/neos-ui-extensibility": "~8.3.9",
+    "@neos-project/neos-ui-extensibility": "~8.3.10",
     "clsx": "^2.1.1",
-    "esbuild": "^0.23.1",
+    "esbuild": "^0.24.0",
     "esbuild-plugin-lightningcss-modules": "^0.1.2",
     "prettier": "^3.3.3",
     "react": "^18.3.1"
