@@ -52,7 +52,7 @@ function Editor(props) {
 
     const options = { ...defaultProps.options, ...props.options };
     const { value, highlight, i18nRegistry } = props;
-    const valueAsString = value === 0 ? "0" : value || "";
+    const valueAsString = !value ? "0" : value;
     // Calculate the width of the input field based on the length of the min, max and step values
     const numLength = (value) => value.toString().length;
     const additionalStepLength = numLength(options.step) - 1;
