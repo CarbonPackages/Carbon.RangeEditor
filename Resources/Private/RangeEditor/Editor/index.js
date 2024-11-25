@@ -112,7 +112,7 @@ function Editor(props) {
             return i18nRegistry.translate(label);
         }
         if (value >= options.max) {
-            const fallback = !showInput || ignoreShowInput ? options.min + unit : null;
+            const fallback = !showInput || ignoreShowInput ? options.max + unit : null;
             const label = options.maxLabel || getValueLabel(options.max) || fallback;
             return i18nRegistry.translate(label);
         }
