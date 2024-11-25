@@ -166,7 +166,7 @@ function Editor(props) {
                                 type="button"
                                 title={i18nRegistry.translate("Neos.Neos.Ui:Main:rangeEditorMinimum")}
                                 onClick={() => changeValue(options.min)}
-                                style={{ opacity: options.min >= value ? 1 : 0.7 }}
+                                style={{ opacity: !showInput && options.min >= value ? 1 : 0.7 }}
                                 disabled={options.disabled}
                             >
                                 {getLabel(options.min, true)}
@@ -200,7 +200,7 @@ function Editor(props) {
                                 type="button"
                                 title={i18nRegistry.translate("Neos.Neos.Ui:Main:rangeEditorMaximum")}
                                 onClick={() => changeValue(options.max)}
-                                style={{ opacity: options.max <= value ? 1 : 0.7 }}
+                                style={{ opacity: !showInput && options.max <= value ? 1 : 0.7 }}
                                 disabled={options.disabled}
                             >
                                 {getLabel(options.max, true)}
