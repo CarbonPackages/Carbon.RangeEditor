@@ -62,6 +62,23 @@ function Editor(props) {
         }
     };
 
+    const onKeyDown = (event) => {
+        const key = event.key;
+        let step = options.step;
+        if (key == "ArrowUp" || key == "ArrowDown") {
+            step *= 10;
+        } else if (key == "PageUp" || key == "PageDown") {
+            step *= 100;
+        }
+        if (key == "PageUp" || key == "ArrowUp" || key == "ArrowRight") {
+            changeValue(Math.min(value + step, options.max));
+            event.preventDefault();
+        } else if (key == "PageDown" || key == "ArrowDown" || key == "ArrowLeft") {
+            changeValue(Math.max(value - step, options.min));
+            event.preventDefault();
+        }
+    };
+
     const options = { ...defaultProps.options, ...props.options };
     const valueAsString = !value ? "0" : value;
     // Calculate the width of the input field based on the length of the min, max and step values
@@ -140,6 +157,7 @@ function Editor(props) {
                         <input
                             title={i18nRegistry.translate("Neos.Neos.Ui:Main:rangeEditorCurrentValue")}
                             type="text"
+                            onKeyDown={onKeyDown}
                             onKeyPress={onKeyPress}
                             onChange={(event) => setState(event.target.value)}
                             value={!state ? "0" : state}
