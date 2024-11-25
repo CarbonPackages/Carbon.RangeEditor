@@ -31,6 +31,8 @@ function Editor(props) {
     const { value, highlight, i18nRegistry } = props;
     const [state, setState] = useState(value);
     const [debouncedState] = useDebounce(state, 500);
+    const options = { ...defaultProps.options, ...props.options };
+    const ratioMode = options.ratio == true && options.unit == "%" && options.min >= 0 && options.max <= 100;
 
     const handleChange = (event) => {
         changeValue(event.target.value);
@@ -79,7 +81,6 @@ function Editor(props) {
         }
     };
 
-    const options = { ...defaultProps.options, ...props.options };
     const valueAsString = !value ? "0" : value;
     // Calculate the width of the input field based on the length of the min, max and step values
     const numLength = (value) => value.toString().length;
@@ -139,50 +140,73 @@ function Editor(props) {
                     !options.showMinLabel && !options.showMaxLabel && style.editorValueSingle,
                 )}
             >
-                {options.showMinLabel && (
-                    <button
-                        type="button"
-                        title={i18nRegistry.translate("Neos.Neos.Ui:Main:rangeEditorMinimum")}
-                        onClick={() => changeValue(options.min)}
-                        style={{ opacity: options.min >= value ? 1 : 0.7 }}
-                        disabled={options.disabled}
-                    >
-                        {getLabel(options.min, true)}
-                    </button>
-                )}
-                {!showMiddle && !showInput && <span>&nbsp;</span>}
-                {currentLabel && showMiddle && <span className={style.valueLabel}>{currentLabel}</span>}
-                {!currentLabel && showInput && (
-                    <span>
-                        <input
-                            title={i18nRegistry.translate("Neos.Neos.Ui:Main:rangeEditorCurrentValue")}
-                            type="text"
-                            onKeyDown={onKeyDown}
-                            onKeyPress={onKeyPress}
-                            onChange={(event) => setState(event.target.value)}
-                            value={!state ? "0" : state}
-                            style={{ width: styleWidth }}
+                {ratioMode ? (
+                    <>
+                        <button
+                            type="button"
+                            title={i18nRegistry.translate("Neos.Neos.Ui:Main:rangeEditorMinimum")}
+                            onClick={() => changeValue(options.min)}
                             disabled={options.disabled}
-                        />
-                        {unit}
-                    </span>
-                )}
-                {!currentLabel && showMiddle && !showInput && (
-                    <span>
-                        {valueAsString}
-                        {unit}
-                    </span>
-                )}
-                {options.showMaxLabel && (
-                    <button
-                        type="button"
-                        title={i18nRegistry.translate("Neos.Neos.Ui:Main:rangeEditorMaximum")}
-                        onClick={() => changeValue(options.max)}
-                        style={{ opacity: options.max <= value ? 1 : 0.7 }}
-                        disabled={options.disabled}
-                    >
-                        {getLabel(options.max, true)}
-                    </button>
+                        >
+                            {valueAsString}%
+                        </button>
+                        <button
+                            type="button"
+                            title={i18nRegistry.translate("Neos.Neos.Ui:Main:rangeEditorMaximum")}
+                            onClick={() => changeValue(options.max)}
+                            disabled={options.disabled}
+                        >
+                            {100 - value}%
+                        </button>
+                    </>
+                ) : (
+                    <>
+                        {options.showMinLabel && (
+                            <button
+                                type="button"
+                                title={i18nRegistry.translate("Neos.Neos.Ui:Main:rangeEditorMinimum")}
+                                onClick={() => changeValue(options.min)}
+                                style={{ opacity: options.min >= value ? 1 : 0.7 }}
+                                disabled={options.disabled}
+                            >
+                                {getLabel(options.min, true)}
+                            </button>
+                        )}
+                        {!showMiddle && !showInput && <span>&nbsp;</span>}
+                        {currentLabel && showMiddle && <span className={style.valueLabel}>{currentLabel}</span>}
+                        {!currentLabel && showInput && (
+                            <span>
+                                <input
+                                    title={i18nRegistry.translate("Neos.Neos.Ui:Main:rangeEditorCurrentValue")}
+                                    type="text"
+                                    onKeyDown={onKeyDown}
+                                    onKeyPress={onKeyPress}
+                                    onChange={(event) => setState(event.target.value)}
+                                    value={!state ? "0" : state}
+                                    style={{ width: styleWidth }}
+                                    disabled={options.disabled}
+                                />
+                                {unit}
+                            </span>
+                        )}
+                        {!currentLabel && showMiddle && !showInput && (
+                            <span>
+                                {valueAsString}
+                                {unit}
+                            </span>
+                        )}
+                        {options.showMaxLabel && (
+                            <button
+                                type="button"
+                                title={i18nRegistry.translate("Neos.Neos.Ui:Main:rangeEditorMaximum")}
+                                onClick={() => changeValue(options.max)}
+                                style={{ opacity: options.max <= value ? 1 : 0.7 }}
+                                disabled={options.disabled}
+                            >
+                                {getLabel(options.max, true)}
+                            </button>
+                        )}
+                    </>
                 )}
             </div>
         </div>

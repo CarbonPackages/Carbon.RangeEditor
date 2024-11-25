@@ -7,6 +7,9 @@ This editor has some more features as the one who is already in the core:
 * Minimal and maximal are clickable
 * If minimal or maximal value is set, the value in the middle gets hidden
 * You can set a own text for every value
+* The input field is debounced, so it is finally possible to set the value with the keypad
+* Handle arrows keys and page up/down keys in the text input field
+* Ratio mode
 
 Example:
 
@@ -64,6 +67,27 @@ If you work with `xlf` files, you can also ad a setting called `valueLabelsFile`
 
 In that case, the plugin search for the translation value in the file `ZoomLevel.xlf` in the package `Foo.Bar`.
 Example: For the value `5` the translation string will be `Foo.Bar:ZoomLevel:5`.
+
+## Ratio mode
+
+If the unit i set to `%`, the `min` value `0` or bigger, the `max` value `100` or smaller and `ratio` is set to `true`,
+it will show the ratio of the two values. For example, if the value is set to `30`, the left value will show `30%` and
+the right value will show `70%`.
+
+```yaml
+'Foo.Bar:Element':
+  properties:
+    ratio:
+      type: integer
+      ui:
+        inspector:
+          editor: 'Carbon.RangeEditor/Editor'
+          editorOptions:
+            ratio: true
+            min: 25
+            max: 75
+            step: 5
+```
 
 [packagist]: https://packagist.org/packages/carbon/rangeeditor
 [latest stable version]: https://poser.pugx.org/carbon/rangeeditor/v/stable
