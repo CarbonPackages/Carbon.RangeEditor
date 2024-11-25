@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { neos } from "@neos-project/neos-ui-decorators";
+import { useDebounce } from "use-debounce";
 import style from "./style.module.css";
 import clsx from "clsx";
 
@@ -19,6 +20,7 @@ const defaultProps = {
         minLabel: null,
         maxLabel: null,
         disabled: false,
+        showInput: true,
         valueLabelsFile: "",
         valueLabels: {},
     },
@@ -26,12 +28,22 @@ const defaultProps = {
 
 function Editor(props) {
     const forceUpdate = useForceUpdate();
+    const { value, highlight, i18nRegistry } = props;
+    const [state, setState] = useState(value);
+    const [debouncedState] = useDebounce(state, 500);
 
     const handleChange = (event) => {
         changeValue(event.target.value);
     };
 
+    useEffect(() => {
+        if (debouncedState != value) {
+            changeValue(debouncedState);
+        }
+    }, [debouncedState]);
+
     const changeValue = (value) => {
+        setState(value);
         const { options } = props;
         const useParseInt = (options.step || 1) % 1 === 0;
         value = useParseInt ? parseInt(value, 10) : parseFloat(value, 10);
@@ -51,7 +63,6 @@ function Editor(props) {
     };
 
     const options = { ...defaultProps.options, ...props.options };
-    const { value, highlight, i18nRegistry } = props;
     const valueAsString = !value ? "0" : value;
     // Calculate the width of the input field based on the length of the min, max and step values
     const numLength = (value) => value.toString().length;
@@ -77,13 +88,15 @@ function Editor(props) {
         return null;
     };
 
-    const getLabel = (value) => {
+    const getLabel = (value, ignoreShowInput) => {
         if (value <= options.min) {
-            const label = options.minLabel || getValueLabel(options.min) || options.min + unit;
+            const fallback = !showInput || ignoreShowInput ? options.min + unit : null;
+            const label = options.minLabel || getValueLabel(options.min) || fallback;
             return i18nRegistry.translate(label);
         }
         if (value >= options.max) {
-            const label = options.maxLabel || getValueLabel(options.max) || options.max + unit;
+            const fallback = !showInput || ignoreShowInput ? options.min + unit : null;
+            const label = options.maxLabel || getValueLabel(options.max) || fallback;
             return i18nRegistry.translate(label);
         }
         return i18nRegistry.translate(getValueLabel(value));
@@ -117,26 +130,28 @@ function Editor(props) {
                         style={{ opacity: options.min >= value ? 1 : 0.7 }}
                         disabled={options.disabled}
                     >
-                        {getLabel(options.min)}
+                        {getLabel(options.min, true)}
                     </button>
                 )}
-                {!showMiddle && <span>&nbsp;</span>}
+                {!showMiddle && !showInput && <span>&nbsp;</span>}
                 {currentLabel && showMiddle && <span className={style.valueLabel}>{currentLabel}</span>}
-                {!currentLabel && showMiddle && (
+                {!currentLabel && showInput && (
                     <span>
-                        {showInput ? (
-                            <input
-                                title={i18nRegistry.translate("Neos.Neos.Ui:Main:rangeEditorCurrentValue")}
-                                type="text"
-                                onKeyPress={onKeyPress}
-                                onChange={handleChange}
-                                value={valueAsString}
-                                style={{ width: styleWidth }}
-                                disabled={options.disabled}
-                            />
-                        ) : (
-                            valueAsString
-                        )}
+                        <input
+                            title={i18nRegistry.translate("Neos.Neos.Ui:Main:rangeEditorCurrentValue")}
+                            type="text"
+                            onKeyPress={onKeyPress}
+                            onChange={(event) => setState(event.target.value)}
+                            value={!state ? "0" : state}
+                            style={{ width: styleWidth }}
+                            disabled={options.disabled}
+                        />
+                        {unit}
+                    </span>
+                )}
+                {!currentLabel && showMiddle && !showInput && (
+                    <span>
+                        {valueAsString}
                         {unit}
                     </span>
                 )}
@@ -148,7 +163,7 @@ function Editor(props) {
                         style={{ opacity: options.max <= value ? 1 : 0.7 }}
                         disabled={options.disabled}
                     >
-                        {getLabel(options.max)}
+                        {getLabel(options.max, true)}
                     </button>
                 )}
             </div>
