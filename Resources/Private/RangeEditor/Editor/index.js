@@ -40,7 +40,18 @@ function Editor(props) {
 
     useEffect(() => {
         if (debouncedState != value) {
-            changeValue(debouncedState);
+            // Check if the value from the input field fits into the step settings
+            const { step, min } = options;
+            const number = parseFloat(debouncedState);
+            let addValue = step - ((number - min) % step);
+            if (addValue == 0 || addValue == step) {
+                addValue = 0;
+            }
+            if (addValue > step / 2) {
+                addValue = addValue - step;
+            }
+            const finalValue = Math.min(options.max, Math.max(options.min, number + addValue));
+            changeValue(finalValue);
         }
     }, [debouncedState]);
 
