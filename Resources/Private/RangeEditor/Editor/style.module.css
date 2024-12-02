@@ -1,6 +1,8 @@
+/* stylelint-disable custom-property-pattern */
+
 .slider {
     appearance: none;
-    background: var(--colors-ContrastNeutral from global);
+    background: var(--colors-ContrastNeutral);
     cursor: pointer;
     height: 25px;
     outline: none;
@@ -9,7 +11,7 @@
 
     &::-webkit-slider-thumb {
         appearance: none;
-        background: var(--colors-PrimaryBlue from global);
+        background: var(--colors-PrimaryBlue);
         border-radius: 5px;
         box-shadow: 0 0 0 #000, 0 0 0 #0d0d0d;
         cursor: pointer;
@@ -17,16 +19,16 @@
         opacity: .7;
         width: 20px;
         border: none;
+    }
 
-        &:hover,
-        &:focus {
-            background: var(--colors-PrimaryBlueHover from global);
-        }
+    &::-webkit-slider-thumb:hover,
+    &:focus::-webkit-slider-thumb {
+        background: var(--colors-PrimaryBlueHover);
     }
 
     &::-moz-range-thumb {
         appearance: none;
-        background: var(--colors-PrimaryBlue from global);
+        background: var(--colors-PrimaryBlue);
         border-radius: 5px;
         box-shadow: 0 0 0 #000, 0 0 0 #0d0d0d;
         cursor: pointer;
@@ -34,16 +36,16 @@
         opacity: .7;
         width: 25px;
         border: none;
+    }
 
-        &:hover,
-        &:focus {
-            background: var(--colors-PrimaryBlueHover from global);
-        }
+    &::-moz-range-thumb:hover,
+    &:focus::-moz-range-thumb {
+        background: var(--colors-PrimaryBlueHover);
     }
 }
 
 .sliderHighlight {
-    box-shadow: 0 0 0 2px var(--colors-Warn from global);
+    box-shadow: 0 0 0 2px var(--colors-Warn);
 }
 
 .editorValue {
@@ -58,23 +60,54 @@
         padding: 0;
         border: 0;
         color: inherit;
+        border-radius: 2px;
+
+        &:focus {
+            outline: 2px solid var(--colors-PrimaryBlue);
+            outline-offset: 2px;
+        }
+    }
+}
+
+.textfield {
+    background: var(--colors-ContrastNeutral);
+    border: 0;
+    color: var(--colors-ContrastBrightest);
+    display: flex;
+    align-items: center;
+    padding: 0 var(--spacing-Half);
+    border-radius: 2px;
+    gap: 1px;
+    cursor: text;
+
+    &:focus-within {
+        color: var(--colors-ContrastDarkest);
+        background: var(--colors-ContrastBrightest);
     }
 
     & input {
         appearance: none;
-        background: var(--colors-ContrastNeutral from global);
+        padding: 0;
         border: 0;
-        color: #fff;
+        margin: 0;
+        background: transparent;
+        color: inherit;
         display: inline-block;
-        padding: 0 .3rem;
         text-align: right;
         box-sizing: content-box;
-        margin-right: var(--spacing-Quarter from global);
 
         &:focus {
-            outline: 1px solid var(--colors-PrimaryBlue from global);
+            outline: none;
         }
     }
+
+    & span {
+        user-select: none;
+    }
+}
+
+.textfieldGap {
+    gap: 0.25em;
 }
 
 .editorValueSingle {
@@ -95,11 +128,11 @@
 
     & .slider::-webkit-slider-thumb {
         pointer-events: none;
-        background: var(--colors-ContrastBright from global);
+        background: var(--colors-ContrastBright);
     }
 
     & .slider::-moz-range-thumb {
         pointer-events: none;
-        background: var(--colors-ContrastBright from global);
+        background: var(--colors-ContrastBright);
     }
 }

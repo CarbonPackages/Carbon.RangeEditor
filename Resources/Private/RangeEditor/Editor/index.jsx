@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { neos } from "@neos-project/neos-ui-decorators";
 import { useDebounce } from "use-debounce";
 import style from "./style.module.css";
@@ -9,30 +9,28 @@ const neosifier = neos((globalRegistry) => ({
     config: globalRegistry.get("frontendConfiguration").get("Carbon.RangeEditor"),
 }));
 
-const defaultProps = {
-    options: {
-        min: 0,
-        max: 100,
-        step: 1,
-        unit: "",
-        showMinLabel: true,
-        showMaxLabel: true,
-        minLabel: null,
-        maxLabel: null,
-        disabled: false,
-        showInput: true,
-        valueLabelsFile: "",
-        valueLabels: {},
-    },
+const defaultOptions = {
+    min: 0,
+    max: 100,
+    step: 1,
+    unit: "",
+    showMinLabel: true,
+    showMaxLabel: true,
+    minLabel: null,
+    maxLabel: null,
+    disabled: false,
+    showInput: true,
+    valueLabelsFile: "",
+    valueLabels: {},
 };
 
-function Editor(props) {
+function Editor({ value, id, highlight, i18nRegistry, onEnterKey, onKeyDown, onKeyPress, commit, ...props }) {
     const forceUpdate = useForceUpdate();
-    const { value, highlight, i18nRegistry } = props;
     const [state, setState] = useState(value);
     const [debouncedState] = useDebounce(state, 500);
-    const options = { ...defaultProps.options, ...props.options };
+    const options = { ...defaultOptions, ...props.options };
     const ratioMode = options.ratio == true && options.unit == "%" && options.min >= 0 && options.max <= 100;
+    const textfieldRef = useRef(null);
 
     const handleChange = (event) => {
         changeValue(event.target.value);
@@ -57,38 +55,48 @@ function Editor(props) {
 
     const changeValue = (value) => {
         setState(value);
-        const { options } = props;
         const useParseInt = (options.step || 1) % 1 === 0;
         value = useParseInt ? parseInt(value, 10) : parseFloat(value, 10);
         if (isNaN(value)) {
             return;
         }
         value = Math.min(options.max, Math.max(options.min, value));
-        props.commit(value);
+        commit(value);
 
         forceUpdate();
     };
 
-    const onKeyPress = (event) => {
-        if (isNaN(event.key)) {
-            event.preventDefault();
+    const handleKeyPress = (event) => {
+        if (typeof onKeyPress === "function") {
+            onKeyPress(event);
+        }
+
+        if (event.key === "Enter" && typeof onEnterKey === "function") {
+            onEnterKey();
+            return;
         }
     };
 
-    const onKeyDown = (event) => {
-        const key = event.key;
-        let step = options.step;
-        if (key == "ArrowUp" || key == "ArrowDown") {
-            step *= 10;
-        } else if (key == "PageUp" || key == "PageDown") {
-            step *= 100;
+    const handleKeyDown = (event) => {
+        if (typeof onKeyDown === "function") {
+            onKeyDown(event);
         }
-        if (key == "PageUp" || key == "ArrowUp" || key == "ArrowRight") {
-            changeValue(Math.min(value + step, options.max));
-            event.preventDefault();
-        } else if (key == "PageDown" || key == "ArrowDown" || key == "ArrowLeft") {
+
+        const key = event.key;
+        const isUp = key == "ArrowUp";
+        if (key == "ArrowDown" || isUp) {
+            let step = options.step;
+            const { metaKey, shiftKey } = event;
+            const multiplier = shiftKey ? 10 : metaKey ? 100 : 1;
+            step = step * multiplier;
+            if (isUp) {
+                changeValue(Math.min(value + step, options.max));
+                event.preventDefault();
+                return;
+            }
             changeValue(Math.max(value - step, options.min));
             event.preventDefault();
+            return;
         }
     };
 
@@ -137,12 +145,15 @@ function Editor(props) {
         <div className={clsx(style.editor, options.disabled && style.editorDisabled)}>
             <input
                 type="range"
+                id={!ratioMode && !currentLabel && showInput ? null : id}
                 min={options.min}
                 max={options.max}
                 step={options.step}
                 value={valueAsString}
                 className={clsx(style.slider, highlight && style.sliderHighlight)}
                 onChange={handleChange}
+                onKeyDown={handleKeyDown}
+                onKeyPress={handleKeyPress}
                 disabled={options.disabled}
             />
             <div
@@ -186,18 +197,27 @@ function Editor(props) {
                         {!showMiddle && !showInput && <span>&nbsp;</span>}
                         {currentLabel && showMiddle && <span className={style.valueLabel}>{currentLabel}</span>}
                         {!currentLabel && showInput && (
-                            <span>
+                            <span className={clsx(style.textfield, !!unit && unit.toString().startsWith(" ") && style.textfieldGap)} onClick={() => {
+                                textfieldRef?.current?.focus();
+                            }}>
                                 <input
+                                    id={id}
                                     title={i18nRegistry.translate("Neos.Neos.Ui:Main:rangeEditorCurrentValue")}
                                     type="text"
-                                    onKeyDown={onKeyDown}
-                                    onKeyPress={onKeyPress}
+                                    onKeyDown={handleKeyDown}
+                                    onKeyPress={(event) => {
+                                        handleKeyPress(event);
+                                        if (isNaN(event.key)) {
+                                            event.preventDefault();
+                                        }
+                                    }}
                                     onChange={(event) => setState(event.target.value)}
                                     value={!state ? "0" : state}
                                     style={{ width: styleWidth }}
                                     disabled={options.disabled}
+                                    ref={textfieldRef}
                                 />
-                                {unit}
+                                {unit && <span>{unit.toString().trim()}</span>}
                             </span>
                         )}
                         {!currentLabel && showMiddle && !showInput && (

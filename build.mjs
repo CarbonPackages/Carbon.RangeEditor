@@ -14,10 +14,8 @@ const options = {
     legalComments: "none",
     entryPoints: { Plugin: "Resources/Private/RangeEditor/manifest.js" },
     loader: {
-        ".js": "tsx",
-        ".pcss": "css",
+        ".js": "jsx",
     },
-    // external: ["images/*", "icon-fullscreen.svg"],
     outdir: "Resources/Public",
     alias: extensibilityMap,
     plugins: [
@@ -26,7 +24,6 @@ const options = {
                 chrome: 80, // aligns somewhat to es2020
             },
             cssModules: {
-                dashedIdents: true,
                 pattern: "carbon-rangeeditor-[hash]-[local]",
             },
         }),
