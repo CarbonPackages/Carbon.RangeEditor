@@ -5,7 +5,8 @@
 This editor has some more features as the one who is already in the core:
 
 * Minimal and maximal are clickable
-* If minimal or maximal value is set, the value in the middle gets hidden
+* It's possible to hide the input via `showInput: false`
+* The text input has a nicer ux, specially if a unit is set
 * You can set a own text for every value
 * The input field is debounced, so it is finally possible to set the value with the keypad
 * Handle arrows keys (up/down) (with modifier keys for bigger steps) to increase or decrease the value via keyboard
