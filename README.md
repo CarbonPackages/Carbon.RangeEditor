@@ -8,7 +8,7 @@ This editor has some more features as the one who is already in the core:
 * If minimal or maximal value is set, the value in the middle gets hidden
 * You can set a own text for every value
 * The input field is debounced, so it is finally possible to set the value with the keypad
-* Handle arrows keys and page up/down keys in the text input field
+* Handle arrows keys (up/down) (with modifier keys for bigger steps) to increase or decrease the value via keyboard
 * Ratio mode
 
 Example:
