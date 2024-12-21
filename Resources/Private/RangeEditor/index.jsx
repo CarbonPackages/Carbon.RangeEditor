@@ -1,13 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { neos } from "@neos-project/neos-ui-decorators";
 import { useDebounce } from "use-debounce";
-import style from "./style.module.css";
-import clsx from "clsx";
-
-const neosifier = neos((globalRegistry) => ({
-    i18nRegistry: globalRegistry.get("i18n"),
-    config: globalRegistry.get("frontendConfiguration").get("Carbon.RangeEditor"),
-}));
+import * as stylex from "@stylexjs/stylex";
+import { colors, transitions } from "./Tokens.stylex";
 
 const defaultOptions = {
     min: 0,
@@ -24,11 +19,146 @@ const defaultOptions = {
     valueLabels: {},
 };
 
+const styles = stylex.create({
+    slider: {
+        "--opacity": 0.7,
+        appearance: "none",
+        background: colors.neutral,
+        cursor: "pointer",
+        height: 25,
+        outline: "none",
+        width: "100%",
+        borderRadius: 2,
+
+        ":focus": {
+            "--opacity": 1,
+        },
+
+        "::-webkit-slider-thumb": {
+            appearance: "none",
+            background: "var(--color)",
+            borderRadius: 5,
+            boxShadow: "0 0 0 #000, 0 0 0 #0d0d0d",
+            cursor: "grab",
+            height: 20,
+            opacity: "var(--opacity)",
+            width: 20,
+            border: "none",
+            transitionProperty: "transform, opacity",
+            transitionTimingFunction: transitions.timing,
+            transitionDuration: transitions.default,
+
+            ":hover": {
+                opacity: 1,
+            },
+            ":active": {
+                cursor: "grabbing",
+                transform: "scale(1.2)",
+            },
+        },
+
+        "::-moz-range-thumb": {
+            appearance: "none",
+            background: "var(--color)",
+            borderRadius: 5,
+            boxShadow: "0 0 0 #000, 0 0 0 #0d0d0d",
+            cursor: "pointer",
+            height: 25,
+            opacity: "var(--opacity)",
+            width: 25,
+            border: "none",
+            transitionProperty: "transform, opacity",
+            transitionTimingFunction: transitions.timing,
+            transitionDuration: transitions.default,
+
+           ":hover": {
+                opacity: 1,
+            },
+            ":active": {
+                cursor: "grabbing",
+                transform: "scale(1.2)",
+            },
+        },
+    },
+    highlight: {
+        boxShadow: `0 0 0 2px ${colors.warn}`,
+    },
+    editorValue: {
+        alignItems: "center",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+    },
+    editorValueButton: {
+        cursor: "pointer",
+        background: "none",
+        padding: 0,
+        border: 0,
+        color: "inherit",
+        borderRadius: 2,
+        ":focus": {
+            outline: `2px solid ${colors.blue}`,
+            outlineOffset: 2,
+        },
+    },
+    textfield: {
+        background: colors.neutral,
+        border: 0,
+        color: colors.brightest,
+        display: "flex",
+        alignItems: "center",
+        padding: "0 var(--spacing-Half)",
+        borderRadius: 2,
+        gap: 1,
+        cursor: "text",
+        ":focus-within": {
+            color: colors.darkest,
+            background: colors.brightest,
+        },
+    },
+    textfieldInput: {
+        appearance: "none",
+        padding: 0,
+        border: 0,
+        margin: 0,
+        background: "transparent",
+        color: "inherit",
+        display: "inline-block",
+        textAlign: "right",
+        boxSizing: "content-box",
+        ":focus": {
+            outline: "none"
+        },
+    },
+    noSelect: {
+        userSelect: "none"
+    },
+    textfieldGap: {
+        gap: "0.25em"
+    },
+    editorValueSingle: {
+        justifyContent: "center",
+    },
+    editorDisabled: {
+        "--color": colors.bright,
+        opacity: 0.65,
+        cursor: "not-allowed",
+
+        ":where(*)>*": {
+            pointerEvents: "none",
+        }
+    },
+    editorEnabled: {
+        "--color": colors.blue,
+    },
+});
+
 function Editor({ value, id, highlight, i18nRegistry, onEnterKey, onKeyDown, onKeyPress, commit, ...props }) {
     const forceUpdate = useForceUpdate();
     const [state, setState] = useState(value);
     const [debouncedState] = useDebounce(state, 500);
     const options = { ...defaultOptions, ...props.options };
+    const { disabled } = options;
     const ratioMode = options.ratio == true && options.unit == "%" && options.min >= 0 && options.max <= 100;
     const textfieldRef = useRef(null);
 
@@ -142,7 +272,7 @@ function Editor({ value, id, highlight, i18nRegistry, onEnterKey, onKeyDown, onK
     const currentLabel = getLabel(value);
 
     return (
-        <div className={clsx(style.editor, options.disabled && style.editorDisabled)}>
+        <div {...stylex.props(disabled ? styles.editorDisabled : styles.editorEnabled)}>
             <input
                 type="range"
                 id={!ratioMode && !currentLabel && showInput ? null : id}
@@ -150,25 +280,21 @@ function Editor({ value, id, highlight, i18nRegistry, onEnterKey, onKeyDown, onK
                 max={options.max}
                 step={options.step}
                 value={valueAsString}
-                className={clsx(style.slider, highlight && style.sliderHighlight)}
                 onChange={handleChange}
                 onKeyDown={handleKeyDown}
                 onKeyPress={handleKeyPress}
-                disabled={options.disabled}
+                disabled={disabled}
+                {...stylex.props(styles.slider, highlight && styles.highlight)}
             />
-            <div
-                className={clsx(
-                    style.editorValue,
-                    !options.showMinLabel && !options.showMaxLabel && style.editorValueSingle,
-                )}
-            >
+            <div {...stylex.props(styles.editorValue, !options.showMinLabel && !options.showMaxLabel && styles.editorValueSingle)}>
                 {ratioMode ? (
                     <>
                         <button
                             type="button"
                             title={i18nRegistry.translate("Neos.Neos.Ui:Main:rangeEditorMinimum")}
                             onClick={() => changeValue(options.min)}
-                            disabled={options.disabled}
+                            disabled={disabled}
+                            {...stylex.props(styles.editorValueButton)}
                         >
                             {valueAsString}%
                         </button>
@@ -176,7 +302,8 @@ function Editor({ value, id, highlight, i18nRegistry, onEnterKey, onKeyDown, onK
                             type="button"
                             title={i18nRegistry.translate("Neos.Neos.Ui:Main:rangeEditorMaximum")}
                             onClick={() => changeValue(options.max)}
-                            disabled={options.disabled}
+                            disabled={disabled}
+                            {...stylex.props(styles.editorValueButton)}
                         >
                             {100 - value}%
                         </button>
@@ -189,15 +316,18 @@ function Editor({ value, id, highlight, i18nRegistry, onEnterKey, onKeyDown, onK
                                 title={i18nRegistry.translate("Neos.Neos.Ui:Main:rangeEditorMinimum")}
                                 onClick={() => changeValue(options.min)}
                                 style={{ opacity: !showInput && options.min >= value ? 1 : 0.7 }}
-                                disabled={options.disabled}
+                                disabled={disabled}
+                                {...stylex.props(styles.editorValueButton)}
                             >
                                 {getLabel(options.min, true)}
                             </button>
                         )}
                         {!showMiddle && !showInput && <span>&nbsp;</span>}
-                        {currentLabel && showMiddle && <span className={style.valueLabel}>{currentLabel}</span>}
+                        {currentLabel && showMiddle && <span {...stylex.props(styles.noSelect)}>{currentLabel}</span>}
                         {!currentLabel && showInput && (
-                            <span className={clsx(style.textfield, !!unit && unit.toString().startsWith(" ") && style.textfieldGap)} onClick={() => {
+                            <span
+                                {...stylex.props(styles.textfield, !!unit && unit.toString().startsWith(" ") && styles.textfieldGap)}
+                                onClick={() => {
                                 textfieldRef?.current?.focus();
                             }}>
                                 <input
@@ -214,14 +344,15 @@ function Editor({ value, id, highlight, i18nRegistry, onEnterKey, onKeyDown, onK
                                     onChange={(event) => setState(event.target.value)}
                                     value={!state ? "0" : state}
                                     style={{ width: styleWidth }}
-                                    disabled={options.disabled}
+                                    disabled={disabled}
                                     ref={textfieldRef}
+                                    {...stylex.props(styles.textfieldInput)}
                                 />
-                                {unit && <span>{unit.toString().trim()}</span>}
+                                {unit && <span {...stylex.props(styles.noSelect)}>{unit.toString().trim()}</span>}
                             </span>
                         )}
                         {!currentLabel && showMiddle && !showInput && (
-                            <span>
+                            <span {...stylex.props(styles.noSelect)}>
                                 {valueAsString}
                                 {unit}
                             </span>
@@ -232,7 +363,8 @@ function Editor({ value, id, highlight, i18nRegistry, onEnterKey, onKeyDown, onK
                                 title={i18nRegistry.translate("Neos.Neos.Ui:Main:rangeEditorMaximum")}
                                 onClick={() => changeValue(options.max)}
                                 style={{ opacity: !showInput && options.max <= value ? 1 : 0.7 }}
-                                disabled={options.disabled}
+                                disabled={disabled}
+                                {...stylex.props(styles.editorValueButton)}
                             >
                                 {getLabel(options.max, true)}
                             </button>
@@ -255,5 +387,8 @@ function useForceUpdate() {
 function between(x, min, max) {
     return x > min && x < max;
 }
+const neosifier = neos((globalRegistry) => ({
+    i18nRegistry: globalRegistry.get("i18n"),
+}));
 
 export default neosifier(Editor);

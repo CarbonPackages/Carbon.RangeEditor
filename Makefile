@@ -2,6 +2,10 @@
 
 .DEFAULT_GOAL := production
 
+## Clean up
+clean:
+	rm -rf Resources/Public
+
 ## Prettier files
 prettier:
 	pnpm prettier --write --no-error-on-unmatched-pattern 'Resources/Private/**/*.{js,ts,php,yaml,pcss}'
@@ -16,14 +20,17 @@ install:
 
 ## Watch for changes in JS and CSS files
 watch:
+	make clean
 	pnpm watch
 
 ## Build development version
 dev:
+	make clean
 	pnpm dev
 
 ## Build production version
 build:
+	make clean
 	pnpm build
 
 # Define colors
