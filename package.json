@@ -1,17 +1,35 @@
 {
-  "description": "Carbon.RangeEditor",
-  "license": "proprietary",
-  "private": true,
+  "name": "carbon-neos-range-editor",
+  "description": "Range editor for Neos CMS",
+  "license": "GPL-3.0",
+  "author": "Jon Uhlmann",
+  "type": "module",
+  "main": "Resources/Private/RangeEditor/index.jsx",
+  "module": "Resources/Private/RangeEditor/index.jsx",
+  "exports": {
+    ".": {
+      "require": null,
+      "import": "./Resources/Private/RangeEditor/index.jsx"
+    }
+  },
+  "files": [
+    "Resources/Private/RangeEditor",
+    "!Resources/Private/RangeEditor/manifest.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/CarbonPackages/Carbon.Editor.Styling.git"
+  },
   "scripts": {
-    "pipeline": "pnpm install; pnpm build",
-    "build": "node build.mjs --production",
-    "watch": "node build.mjs --watch",
-    "dev": "node build.mjs"
+    "build": "NODE_OPTIONS=--disable-warning=ExperimentalWarning node build.mjs --production",
+    "watch": "NODE_OPTIONS=--disable-warning=ExperimentalWarning node build.mjs --watch",
+    "dev": "NODE_OPTIONS=--disable-warning=ExperimentalWarning node build.mjs",
+    "pipeline": "pnpm install --silent;pnpm build"
   },
   "devDependencies": {
     "@neos-project/neos-ui-extensibility": "~8.3.11",
     "@stylexjs/esbuild-plugin": "^0.9.3",
-    "esbuild": "^0.24.0",
+    "esbuild": "^0.24.2",
     "prettier": "^3.4.2"
   },
   "dependencies": {
