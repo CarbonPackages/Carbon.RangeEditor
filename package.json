@@ -18,7 +18,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/CarbonPackages/Carbon.Editor.Styling.git"
+    "url": "git://github.com/CarbonPackages/Carbon.RangeEditor.git"
   },
   "scripts": {
     "build": "NODE_OPTIONS=--disable-warning=ExperimentalWarning node build.mjs --production",
