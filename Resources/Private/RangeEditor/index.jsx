@@ -96,6 +96,7 @@ const styles = stylex.create({
         border: 0,
         color: "inherit",
         borderRadius: 2,
+        minHeight: 20,
         ":focus": {
             outline: `2px solid ${colors.blue}`,
             outlineOffset: 2,
