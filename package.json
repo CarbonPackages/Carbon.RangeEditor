@@ -4,12 +4,12 @@
   "license": "GPL-3.0",
   "author": "Jon Uhlmann",
   "type": "module",
-  "main": "Resources/Private/RangeEditor/index.jsx",
-  "module": "Resources/Private/RangeEditor/index.jsx",
+  "main": "Resources/Private/RangeEditor/RangeEditor.jsx",
+  "module": "Resources/Private/RangeEditor/RangeEditor.jsx",
   "exports": {
     ".": {
       "require": null,
-      "import": "./Resources/Private/RangeEditor/index.jsx"
+      "import": "./Resources/Private/RangeEditor/RangeEditor.jsx"
     }
   },
   "files": [

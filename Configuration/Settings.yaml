@@ -5,6 +5,8 @@ Neos:
         javascript:
           Carbon.RangeEditor:Plugin:
             resource: resource://Carbon.RangeEditor/Public/Plugin.js
+            attributes:
+              type: 'module'
         stylesheets:
           Carbon.RangeEditor:Plugin:
             resource: resource://Carbon.RangeEditor/Public/Plugin.css

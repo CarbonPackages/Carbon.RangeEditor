@@ -19,7 +19,9 @@ const options = {
     legalComments: "none",
     format: "esm",
     splitting: true,
-    entryPoints: { Plugin: "Resources/Private/RangeEditor/manifest.js" },
+    entryPoints: { Plugin: "Resources/Private/RangeEditor/manifest.js",
+        RangeEditor: "Resources/Private/RangeEditor/RangeEditor.jsx",
+     },
     loader: {
         ".js": "jsx",
     },
