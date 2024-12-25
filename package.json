@@ -23,7 +23,7 @@
   "scripts": {
     "build": "NODE_OPTIONS=--disable-warning=ExperimentalWarning node build.mjs --production",
     "watch": "NODE_OPTIONS=--disable-warning=ExperimentalWarning node build.mjs --watch",
-    "dev": "NODE_OPTIONS=--disable-warning=ExperimentalWarning node build.mjs",
+    "dev": "NODE_OPTIONS=--disable-warning=ExperimentalWarning node build.mjs --dev",
     "pipeline": "pnpm install --silent;pnpm build"
   },
   "devDependencies": {

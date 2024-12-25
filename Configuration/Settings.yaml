@@ -10,3 +10,8 @@ Neos:
         stylesheets:
           Carbon.RangeEditor:Plugin:
             resource: resource://Carbon.RangeEditor/Public/Plugin.css
+    userInterface:
+      translation:
+        autoInclude:
+          Carbon.RangeEditor:
+            - 'Main'

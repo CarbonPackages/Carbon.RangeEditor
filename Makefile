@@ -8,7 +8,7 @@ clean:
 
 ## Prettier files
 prettier:
-	pnpm prettier --write --no-error-on-unmatched-pattern 'Resources/Private/**/*.{js,ts,php,yaml,pcss}'
+	pnpm prettier --write --no-error-on-unmatched-pattern 'Resources/Private/**/*.{js,jsx,ts,php,yaml,pcss}'
 
 ## Install dependencies and build production version
 production: install prettier build

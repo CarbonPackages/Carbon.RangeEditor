@@ -12,10 +12,13 @@
 .range-29crso:not(#\#){padding:0 var(--spacing-Half)}
 .range-1717udv:not(#\#){padding:0}
 .range-1rhx0j6:focus-within:not(#\#){background:var(--range-112jqwz)}
+.range-3nn9bt:where(:hover,:focus):not(#\#){background:var(--range-1yfsa84)}
 .range-1cum3z5:not(#\#):not(#\#){border-radius:2px}
 .range-6gsi71:not(#\#):not(#\#){gap:.25em}
 .range-12mrbbr:not(#\#):not(#\#){gap:1px}
+.range-1jnr06f:not(#\#):not(#\#){gap:4px}
 .range-1a2a7pz:not(#\#):not(#\#){outline:none}
+.range-e1ymxu:where(:hover,:focus):not(#\#):not(#\#){outline:none}
 .range-1x5k38z:focus:not(#\#):not(#\#){outline:2px solid var(--range-1yfsa84)}
 .range-1uvtmcs:focus:not(#\#):not(#\#){outline:none}
 .range-6s0dn4:not(#\#):not(#\#):not(#\#){align-items:center}
@@ -39,8 +42,10 @@
 .range-vszx66:where(*)>*:not(#\#):not(#\#):not(#\#){pointer-events:none}
 .range-1cm8ssg:focus:not(#\#):not(#\#):not(#\#){outline-offset:2px}
 .range-lrawln:not(#\#):not(#\#):not(#\#):not(#\#){height:25px}
+.range-1hqhkut:not(#\#):not(#\#):not(#\#):not(#\#){margin-right:var(--marginRight)}
 .range-isnujt:not(#\#):not(#\#):not(#\#):not(#\#){min-height:20px}
 .range-h8yej3:not(#\#):not(#\#):not(#\#):not(#\#){width:100%}
+.range-ezl2tj:not(#\#):not(#\#):not(#\#):not(#\#){width:25px}
 .range-gk9k07:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#)::-webkit-slider-thumb{background:var(--color)}
 .range-1vedxjn:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#)::-moz-range-thumb{background:var(--color)}
 .range-jpt6gn:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#)::-webkit-slider-thumb{border:none}

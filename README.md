@@ -11,6 +11,7 @@ This editor has some more features as the one who is already in the core:
 * The input field is debounced, so it is finally possible to set the value with the keypad
 * Handle arrows keys (up/down) (with modifier keys for bigger steps) to increase or decrease the value via keyboard
 * Ratio mode
+* Shows reset button of `resetValue` is set
 
 Example:
 
@@ -28,6 +29,12 @@ Example:
             minLabel: null
             maxLabel: null
             showInput: true
+            # If set, it will show a reset button
+            resetValue: 4
+            # Sets a custom icon for the reset button, defaults to 'times'
+            resetIcon: 'undo'
+            # Set custom label to reset button, defaults to 'Carbon.RangeEditor:Main:reset'. The value is also passed to the translation function
+            resetLabel: 'Reset back to {0}'
             min: 1
             max: 6
             step: 1
