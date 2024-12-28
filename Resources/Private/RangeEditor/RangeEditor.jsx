@@ -33,6 +33,7 @@ const styles = stylex.create({
         outline: "none",
         width: "100%",
         borderRadius: 2,
+        marginBottom: 4,
 
         ":focus": {
             "--opacity": 1,
