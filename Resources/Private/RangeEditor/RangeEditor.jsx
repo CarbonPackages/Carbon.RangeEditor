@@ -351,6 +351,24 @@ function Editor({
         />
     );
 
+    const resetLabelValues = (() => {
+        const value = resetValue;
+        if (ratioMode) {
+            return {
+                value,
+                unit: "%",
+            };
+        }
+        const label = getLabel(value);
+        if (label) {
+            return {
+                value: label,
+                unit: "",
+            };
+        }
+        return {value, unit};
+    })();
+
     return (
         <div
             {...stylex.props(
@@ -365,9 +383,7 @@ function Editor({
                     {renderInput}
                     <button
                         {...stylex.props(styles.resetButton)}
-                        title={i18nRegistry.translate(resetLabel, null, [
-                            resetValue,
-                        ])}
+                        title={i18nRegistry.translate(resetLabel, null, resetLabelValues)}
                         onClick={({ currentTarget }) => {
                             currentTarget.blur();
                             changeValue(resetValue);

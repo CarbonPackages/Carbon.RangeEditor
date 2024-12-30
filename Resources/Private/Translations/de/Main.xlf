@@ -3,8 +3,8 @@
     <file original="" product-name="Carbon.RangeEditor" source-language="en" target-language="de" datatype="plaintext">
         <body>
             <trans-unit id="reset" xml:space="preserve">
-                <source>Reset to {0}</source>
-                <target>Zurücksetzen auf {0}</target>
+                <source>Reset to {value}{unit}</source>
+                <target>Zurücksetzen auf {value}{unit}</target>
             </trans-unit>
         </body>
     </file>

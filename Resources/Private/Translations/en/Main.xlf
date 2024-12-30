@@ -3,7 +3,7 @@
     <file original="" product-name="Carbon.RangeEditor" source-language="en" datatype="plaintext">
         <body>
             <trans-unit id="reset" xml:space="preserve">
-                <source>Reset to {0}</source>
+                <source>Reset to {value}{unit}</source>
             </trans-unit>
         </body>
     </file>
