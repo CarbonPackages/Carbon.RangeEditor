@@ -366,7 +366,7 @@ function Editor({
                 unit: "",
             };
         }
-        return {value, unit};
+        return { value, unit };
     })();
 
     return (
@@ -383,7 +383,11 @@ function Editor({
                     {renderInput}
                     <button
                         {...stylex.props(styles.resetButton)}
-                        title={i18nRegistry.translate(resetLabel, null, resetLabelValues)}
+                        title={i18nRegistry.translate(
+                            resetLabel,
+                            null,
+                            resetLabelValues,
+                        )}
                         onClick={({ currentTarget }) => {
                             currentTarget.blur();
                             changeValue(resetValue);
