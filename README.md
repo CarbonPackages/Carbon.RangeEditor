@@ -33,8 +33,9 @@ Example:
             resetValue: 4
             # Sets a custom icon for the reset button, defaults to 'times'
             resetIcon: 'undo'
-            # Set custom label to reset button, defaults to 'Carbon.RangeEditor:Main:reset'. The value is also passed to the translation function
-            resetLabel: 'Reset back to {0}'
+            # Set custom label to reset button, defaults to 'Carbon.RangeEditor:Main:reset'. The value and unit is also passed to the translation function
+            # If the reset value has a label, the label is passed
+            resetLabel: 'Reset back to {value}{unit}'
             min: 1
             max: 6
             step: 1
