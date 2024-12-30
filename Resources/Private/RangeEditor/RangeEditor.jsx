@@ -141,7 +141,7 @@ const styles = stylex.create({
             background: colors.brightest,
         },
     },
-    textfieldInput: {
+    textfieldInput: (width) => ({
         appearance: "none",
         padding: 0,
         border: 0,
@@ -149,11 +149,15 @@ const styles = stylex.create({
         background: "transparent",
         color: "inherit",
         display: "inline-block",
-        textAlign: "right",
+        textAlign: "center",
         boxSizing: "content-box",
+        width: width,
         ":focus": {
             outline: "none",
         },
+    }),
+    textfielInputRight: {
+        textAlign: "right",
     },
     noSelect: {
         userSelect: "none",
@@ -277,12 +281,19 @@ function Editor({
 
     const valueAsString = !value ? "0" : value;
     // Calculate the width of the input field based on the length of the min, max and step values
-    const numLength = (value) => value.toString().length;
-    const additionalStepLength = numLength(options.step) - 1;
-    const styleWidth =
-        Math.max(numLength(options.min), numLength(options.max)) +
-        additionalStepLength +
-        "ch";
+    const inputWidth = (() => {
+        const { min, max, step } = options;
+        const numLength = (value) => value.toString().length;
+        const isInteger = (value) => value % 1 === 0;
+        const additionalStepLength =
+            isInteger(min) && isInteger(max) ? numLength(step) - 1 : 0;
+        return (
+            Math.max(numLength(min), numLength(max)) +
+            additionalStepLength +
+            "ch"
+        );
+    })();
+
     const unit = options.unit ? i18nRegistry.translate(options.unit) : "";
 
     const { valueLabels, valueLabelsFile, showInput } = options;
@@ -456,10 +467,12 @@ function Editor({
                                         setState(event.target.value)
                                     }
                                     value={!state ? "0" : state}
-                                    style={{ width: styleWidth }}
                                     disabled={disabled}
                                     ref={textfieldRef}
-                                    {...stylex.props(styles.textfieldInput)}
+                                    {...stylex.props(
+                                        styles.textfieldInput(inputWidth),
+                                        unit && styles.textfielInputRight,
+                                    )}
                                 />
                                 {unit && (
                                     <span {...stylex.props(styles.noSelect)}>
