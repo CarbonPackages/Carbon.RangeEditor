@@ -126,6 +126,12 @@ const styles = stylex.create({
             outlineOffset: 2,
         },
     },
+    textLeft: {
+        textAlign: "left",
+    },
+    textRight: {
+        textAlign: "right",
+    },
     textfield: {
         background: colors.neutral,
         border: 0,
@@ -415,7 +421,10 @@ function Editor({
                             )}
                             onClick={() => changeValue(options.min)}
                             disabled={disabled}
-                            {...stylex.props(styles.editorValueButton)}
+                            {...stylex.props(
+                                styles.editorValueButton,
+                                styles.textLeft,
+                            )}
                         >
                             {valueAsString}%
                         </button>
@@ -426,7 +435,10 @@ function Editor({
                             )}
                             onClick={() => changeValue(options.max)}
                             disabled={disabled}
-                            {...stylex.props(styles.editorValueButton)}
+                            {...stylex.props(
+                                styles.editorValueButton,
+                                styles.textRight,
+                            )}
                         >
                             {100 - value}%
                         </button>
@@ -447,7 +459,10 @@ function Editor({
                                             : 0.7,
                                 }}
                                 disabled={disabled}
-                                {...stylex.props(styles.editorValueButton)}
+                                {...stylex.props(
+                                    styles.editorValueButton,
+                                    styles.textLeft,
+                                )}
                             >
                                 {getLabel(options.min, true)}
                             </button>
@@ -521,7 +536,10 @@ function Editor({
                                             : 0.7,
                                 }}
                                 disabled={disabled}
-                                {...stylex.props(styles.editorValueButton)}
+                                {...stylex.props(
+                                    styles.editorValueButton,
+                                    styles.textRight,
+                                )}
                             >
                                 {getLabel(options.max, true)}
                             </button>

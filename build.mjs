@@ -37,10 +37,6 @@ const options = {
                 "Resources/Public/Plugin.css",
             ),
             stylexImports: ["@stylexjs/stylex"],
-            unstable_moduleResolution: {
-                type: "commonJS",
-                rootDir: __dirname,
-            },
         }),
     ],
 };
