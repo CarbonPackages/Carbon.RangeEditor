@@ -5,6 +5,9 @@
             <trans-unit id="reset" xml:space="preserve">
                 <source>Reset to {value}{unit}</source>
             </trans-unit>
+            <trans-unit id="loading" xml:space="preserve">
+                <source>Loading…</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

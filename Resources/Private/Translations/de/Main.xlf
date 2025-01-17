@@ -6,6 +6,10 @@
                 <source>Reset to {value}{unit}</source>
                 <target>Zurücksetzen auf {value}{unit}</target>
             </trans-unit>
+            <trans-unit id="loading" xml:space="preserve">
+                <source>Loading…</source>
+                <target>Lade…</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

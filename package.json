@@ -34,6 +34,8 @@
   },
   "dependencies": {
     "@stylexjs/stylex": "^0.10.0",
+    "carbon-neos-loadinganimation": "^1.1.1",
+    "ts-deepmerge": "^7.0.2",
     "use-debounce": "^10.0.4"
   },
   "peerDependencies": {

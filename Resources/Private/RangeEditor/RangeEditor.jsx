@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { neos } from "@neos-project/neos-ui-decorators";
+import { selectors } from "@neos-project/neos-ui-redux-store";
+import Loading from "carbon-neos-loadinganimation/LoadingWithStyleX";
+import { connect } from "react-redux";
 import { Icon } from "@neos-project/react-ui-components";
+import { merge } from "ts-deepmerge";
 import { useDebounce } from "use-debounce";
 import * as stylex from "@stylexjs/stylex";
 import { colors, transitions } from "./Tokens.stylex";
@@ -21,11 +25,22 @@ const defaultOptions = {
     resetValue: undefined,
     resetLabel: "Carbon.RangeEditor:Main:reset",
     resetIcon: "times",
+    dataSourceIdentifier: null,
+    dataSourceUri: null,
+    dataSourceAdditionalData: null,
 };
+
+const getDataLoaderOptionsForProps = (props) => ({
+    contextNodePath: props.focusedNodePath,
+    dataSourceIdentifier: props.options.dataSourceIdentifier,
+    dataSourceUri: props.options.dataSourceUri,
+    dataSourceAdditionalData: props.options.dataSourceAdditionalData,
+    dataSourceDisableCaching: Boolean(props.options.dataSourceDisableCaching),
+});
 
 const styles = stylex.create({
     slider: {
-        "--opacity": 0.7,
+        "--thumb-opacity": 0.7,
         appearance: "none",
         background: colors.neutral,
         cursor: "pointer",
@@ -36,7 +51,7 @@ const styles = stylex.create({
         marginBottom: 4,
 
         ":focus": {
-            "--opacity": 1,
+            "--thumb-opacity": 1,
         },
 
         "::-webkit-slider-thumb": {
@@ -46,7 +61,7 @@ const styles = stylex.create({
             boxShadow: "0 0 0 #000, 0 0 0 #0d0d0d",
             cursor: "grab",
             height: 20,
-            opacity: "var(--opacity)",
+            opacity: "var(--thumb-opacity)",
             width: 20,
             border: "none",
             transitionProperty: "transform, opacity",
@@ -69,7 +84,7 @@ const styles = stylex.create({
             boxShadow: "0 0 0 #000, 0 0 0 #0d0d0d",
             cursor: "pointer",
             height: 25,
-            opacity: "var(--opacity)",
+            opacity: "var(--thumb-opacity)",
             width: 25,
             border: "none",
             transitionProperty: "transform, opacity",
@@ -88,13 +103,15 @@ const styles = stylex.create({
     highlight: {
         boxShadow: `0 0 0 2px ${colors.warn}`,
     },
-    editorValue: (hasReset) => ({
+    editorValue: {
         alignItems: "center",
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
-        marginRight: hasReset ? 29 : null,
-    }),
+    },
+    editorValueWithReset: {
+        marginRight: 29,
+    },
     inputGroup: {
         display: "flex",
         gap: 4,
@@ -189,6 +206,9 @@ const styles = stylex.create({
     editorEnabled: {
         "--color": colors.blue,
     },
+    dimmed: {
+        opacity: 0.7,
+    },
 });
 
 function Editor({
@@ -200,18 +220,144 @@ function Editor({
     onKeyDown,
     onKeyPress,
     commit,
+    dataSourcesDataLoader,
     ...props
 }) {
+    // We use this hack to prevent the editor from re-rendering all the time, even if the options are the same.
+    const [dataSourceOptionsAsJSON, setDataSourceOptionsAsJSON] =
+        useState(null);
+    const getTranslation = (label) =>
+        label ? i18nRegistry.translate(label) : "";
     const forceUpdate = useForceUpdate();
     const [state, setState] = useState(value);
     const [debouncedState] = useDebounce(state, 500);
-    const options = { ...defaultOptions, ...props.options };
-    const { disabled, resetLabel, resetValue, resetIcon } = options;
-    const ratioMode =
-        options.ratio == true &&
-        options.unit == "%" &&
-        options.min >= 0 &&
-        options.max <= 100;
+    const fixedOptions = { ...defaultOptions, ...props.options };
+    const { dataSourceIdentifier, dataSourceUri, dataSourceAdditionalData } =
+        fixedOptions;
+    const hasDataSource = !!(dataSourceIdentifier || dataSourceUri);
+
+    const [isLoading, setIsLoading] = useState(hasDataSource);
+    const [disabled, setDisabled] = useState(fixedOptions.disabled);
+    const [resetLabel, setResetLabel] = useState(fixedOptions.resetLabel);
+    const [resetValue, setResetValue] = useState(fixedOptions.resetValue);
+    const [resetIcon, setResetIcon] = useState(fixedOptions.resetIcon);
+    const [unit, setUnit] = useState(getTranslation(fixedOptions.unit));
+    const [min, setMin] = useState(fixedOptions.min);
+    const [max, setMax] = useState(fixedOptions.max);
+    const [step, setStep] = useState(fixedOptions.step);
+    const [ratioMode, setRatioMode] = useState(isRatioMode(fixedOptions));
+    const [valueLabels, setValueLabels] = useState(fixedOptions.valueLabels);
+    const [valueLabelsFile, setValueLabelsFile] = useState(
+        fixedOptions.valueLabelsFile,
+    );
+    const [showInput, setShowInput] = useState(fixedOptions.showInput);
+    const [inputWidth, setInputWidth] = useState(getInputWidth(fixedOptions));
+    const [ratio, setRatio] = useState(fixedOptions.ratio);
+    const [showMiddle, setShowMiddle] = useState({ ...fixedOptions, value });
+    const [showMinLabel, setShowMinLabel] = useState(fixedOptions.showMinLabel);
+    const [showMaxLabel, setShowMaxLabel] = useState(fixedOptions.showMaxLabel);
+    const [minLabel, setMinLabel] = useState(fixedOptions.minLabel);
+    const [maxLabel, setMaxLabel] = useState(fixedOptions.maxLabel);
+
+    useEffect(() => {
+        const dataAsJSON = JSON.stringify({
+            dataSourceIdentifier,
+            dataSourceUri,
+            dataSourceAdditionalData,
+        });
+        if (!hasDataSource || dataSourceOptionsAsJSON === dataAsJSON) {
+            return;
+        }
+
+        setDataSourceOptionsAsJSON(dataAsJSON);
+
+        // Load options from data source
+        dataSourcesDataLoader
+            .resolveValue(getDataLoaderOptionsForProps(props), value)
+            .then((values) => {
+                setIsLoading(false);
+                const newOptions = merge(fixedOptions, values);
+                if (newOptions.disabled != disabled) {
+                    setDisabled(newOptions.disabled);
+                }
+                if (newOptions.resetLabel != resetLabel) {
+                    setResetLabel(newOptions.resetLabel);
+                }
+                if (newOptions.resetValue != resetValue) {
+                    setResetValue(newOptions.resetValue);
+                }
+                if (newOptions.resetIcon != resetIcon) {
+                    setResetIcon(newOptions.resetIcon);
+                }
+                if (newOptions.min != min) {
+                    setMin(newOptions.min);
+                }
+                if (newOptions.max != max) {
+                    setMax(newOptions.max);
+                }
+                if (newOptions.step != step) {
+                    setStep(newOptions.step);
+                }
+                if (
+                    JSON.stringify(newOptions.valueLabels) !=
+                    JSON.stringify(valueLabels)
+                ) {
+                    setValueLabels(newOptions.valueLabels);
+                }
+                if (newOptions.valueLabelsFile != valueLabelsFile) {
+                    setValueLabelsFile(newOptions.valueLabelsFile);
+                }
+                if (newOptions.showInput != showInput) {
+                    setShowInput(newOptions.showInput);
+                }
+                if (newOptions.ratio != ratio) {
+                    setRatio(newOptions.ratio);
+                }
+                if (newOptions.showMinLabel != showMinLabel) {
+                    setShowMinLabel(newOptions.showMinLabel);
+                }
+                if (newOptions.showMaxLabel != showMaxLabel) {
+                    setShowMaxLabel(newOptions.showMaxLabel);
+                }
+                if (newOptions.minLabel != minLabel) {
+                    setMinLabel(newOptions.minLabel);
+                }
+                if (newOptions.maxLabel != maxLabel) {
+                    setMaxLabel(newOptions.maxLabel);
+                }
+
+                const newUnit = getTranslation(newOptions.unit);
+                if (newUnit != unit) {
+                    setUnit(newUnit);
+                }
+
+                const newInputWidth = getInputWidth(newOptions);
+                if (newInputWidth != inputWidth) {
+                    setInputWidth(inputWidth);
+                }
+            });
+    }, [dataSourceIdentifier, dataSourceUri, dataSourceAdditionalData]);
+
+    useEffect(() => {
+        const newRatioMode = isRatioMode({ ratio, unit, min, max });
+        if (newRatioMode != ratioMode) {
+            setRatioMode(newRatioMode);
+        }
+    }, [ratio, unit, min, max]);
+
+    useEffect(() => {
+        const newShowMiddle = getShowMiddle({
+            value,
+            min,
+            max,
+            showMinLabel,
+            showMaxLabel,
+        });
+        if (newShowMiddle != showMiddle) {
+            setShowMiddle(newShowMiddle);
+        }
+    }, [value, min, max, showMaxLabel, showMinLabel]);
+
     const textfieldRef = useRef(null);
 
     const handleChange = (event) => {
@@ -221,7 +367,6 @@ function Editor({
     useEffect(() => {
         if (debouncedState != value) {
             // Check if the value from the input field fits into the step settings
-            const { step, min } = options;
             const number = parseFloat(debouncedState);
             let addValue = step - ((number - min) % step);
             if (addValue == 0 || addValue == step) {
@@ -230,22 +375,19 @@ function Editor({
             if (addValue > step / 2) {
                 addValue = addValue - step;
             }
-            const finalValue = Math.min(
-                options.max,
-                Math.max(options.min, number + addValue),
-            );
+            const finalValue = Math.min(max, Math.max(min, number + addValue));
             changeValue(finalValue);
         }
     }, [debouncedState]);
 
     const changeValue = (value) => {
         setState(value);
-        const useParseInt = (options.step || 1) % 1 === 0;
+        const useParseInt = (step || 1) % 1 === 0;
         value = useParseInt ? parseInt(value, 10) : parseFloat(value, 10);
         if (isNaN(value)) {
             return;
         }
-        value = Math.min(options.max, Math.max(options.min, value));
+        value = Math.min(max, Math.max(min, value));
         commit(value);
 
         forceUpdate();
@@ -270,46 +412,22 @@ function Editor({
         const key = event.key;
         const isUp = key == "ArrowUp";
         if (key == "ArrowDown" || isUp) {
-            let step = options.step;
             const { metaKey, shiftKey } = event;
             const multiplier = shiftKey ? 10 : metaKey ? 100 : 1;
-            step = step * multiplier;
+            const stepWithMultiplier = step * multiplier;
             if (isUp) {
-                changeValue(Math.min(value + step, options.max));
+                changeValue(Math.min(value + stepWithMultiplier, max));
                 event.preventDefault();
                 return;
             }
-            changeValue(Math.max(value - step, options.min));
+            changeValue(Math.max(value - stepWithMultiplier, min));
             event.preventDefault();
             return;
         }
     };
 
     const valueAsString = !value ? "0" : value;
-    // Calculate the width of the input field based on the length of the min, max and step values
-    const inputWidth = (() => {
-        const { min, max, step } = options;
-        const numLength = (value) => value.toString().length;
-        const isInteger = (value) => value % 1 === 0;
-        const additionalStepLength =
-            isInteger(min) && isInteger(max) ? numLength(step) - 1 : 0;
-        return (
-            Math.max(numLength(min), numLength(max)) +
-            additionalStepLength +
-            "ch"
-        );
-    })();
 
-    const unit = options.unit ? i18nRegistry.translate(options.unit) : "";
-
-    const { valueLabels, valueLabelsFile, showInput } = options;
-    let showMiddle = between(value, options.min, options.max);
-    if (!options.showMinLabel) {
-        showMiddle = showMiddle || value === options.min;
-    }
-    if (!options.showMaxLabel) {
-        showMiddle = showMiddle || value === options.max;
-    }
     const getValueLabel = (value) => {
         if (valueLabels && valueLabels[value]) {
             return valueLabels[value];
@@ -321,18 +439,14 @@ function Editor({
     };
 
     const getLabel = (value, ignoreShowInput) => {
-        if (value <= options.min) {
-            const fallback =
-                !showInput || ignoreShowInput ? options.min + unit : null;
-            const label =
-                options.minLabel || getValueLabel(options.min) || fallback;
+        if (value <= min) {
+            const fallback = !showInput || ignoreShowInput ? min + unit : null;
+            const label = minLabel || getValueLabel(min) || fallback;
             return i18nRegistry.translate(label);
         }
-        if (value >= options.max) {
-            const fallback =
-                !showInput || ignoreShowInput ? options.max + unit : null;
-            const label =
-                options.maxLabel || getValueLabel(options.max) || fallback;
+        if (value >= max) {
+            const fallback = !showInput || ignoreShowInput ? max + unit : null;
+            const label = maxLabel || getValueLabel(max) || fallback;
             return i18nRegistry.translate(label);
         }
         return i18nRegistry.translate(getValueLabel(value));
@@ -345,9 +459,9 @@ function Editor({
         <input
             type="range"
             id={!ratioMode && !currentLabel && showInput ? null : id}
-            min={options.min}
-            max={options.max}
-            step={options.step}
+            min={min}
+            max={max}
+            step={step}
             value={valueAsString}
             onChange={handleChange}
             onKeyDown={handleKeyDown}
@@ -374,6 +488,12 @@ function Editor({
         }
         return { value, unit };
     })();
+
+    if (isLoading) {
+        return (
+            <Loading isLoading={true} title="Carbon.RangeEditor:Main:loading" />
+        );
+    }
 
     return (
         <div
@@ -406,10 +526,10 @@ function Editor({
             )}
             <div
                 {...stylex.props(
-                    styles.editorValue(typeof resetValue !== "undefined"),
-                    !options.showMinLabel &&
-                        !options.showMaxLabel &&
-                        styles.editorValueSingle,
+                    styles.editorValue,
+                    typeof resetValue !== "undefined" &&
+                        styles.editorValueWithReset,
+                    !showMinLabel && !showMaxLabel && styles.editorValueSingle,
                 )}
             >
                 {ratioMode ? (
@@ -419,7 +539,7 @@ function Editor({
                             title={i18nRegistry.translate(
                                 "Neos.Neos.Ui:Main:rangeEditorMinimum",
                             )}
-                            onClick={() => changeValue(options.min)}
+                            onClick={() => changeValue(min)}
                             disabled={disabled}
                             {...stylex.props(
                                 styles.editorValueButton,
@@ -433,7 +553,7 @@ function Editor({
                             title={i18nRegistry.translate(
                                 "Neos.Neos.Ui:Main:rangeEditorMaximum",
                             )}
-                            onClick={() => changeValue(options.max)}
+                            onClick={() => changeValue(max)}
                             disabled={disabled}
                             {...stylex.props(
                                 styles.editorValueButton,
@@ -445,26 +565,23 @@ function Editor({
                     </>
                 ) : (
                     <>
-                        {options.showMinLabel && (
+                        {showMinLabel && (
                             <button
                                 type="button"
                                 title={i18nRegistry.translate(
                                     "Neos.Neos.Ui:Main:rangeEditorMinimum",
                                 )}
-                                onClick={() => changeValue(options.min)}
-                                style={{
-                                    opacity:
-                                        !showInput && options.min >= value
-                                            ? 1
-                                            : 0.7,
-                                }}
+                                onClick={() => changeValue(min)}
                                 disabled={disabled}
                                 {...stylex.props(
                                     styles.editorValueButton,
                                     styles.textLeft,
+                                    !showMiddle && currentLabel && min >= value
+                                        ? null
+                                        : styles.dimmed,
                                 )}
                             >
-                                {getLabel(options.min, true)}
+                                {getLabel(min, true)}
                             </button>
                         )}
                         {!showMiddle && !showInput && <span>&nbsp;</span>}
@@ -522,26 +639,23 @@ function Editor({
                                 {unit}
                             </span>
                         )}
-                        {options.showMaxLabel && (
+                        {showMaxLabel && (
                             <button
                                 type="button"
                                 title={i18nRegistry.translate(
                                     "Neos.Neos.Ui:Main:rangeEditorMaximum",
                                 )}
-                                onClick={() => changeValue(options.max)}
-                                style={{
-                                    opacity:
-                                        !showInput && options.max <= value
-                                            ? 1
-                                            : 0.7,
-                                }}
+                                onClick={() => changeValue(max)}
                                 disabled={disabled}
                                 {...stylex.props(
                                     styles.editorValueButton,
                                     styles.textRight,
+                                    !showMiddle && currentLabel && max <= value
+                                        ? null
+                                        : styles.dimmed,
                                 )}
                             >
-                                {getLabel(options.max, true)}
+                                {getLabel(max, true)}
                             </button>
                         )}
                     </>
@@ -562,8 +676,44 @@ function useForceUpdate() {
 function between(x, min, max) {
     return x > min && x < max;
 }
+
+function isRatioMode({ ratio, unit, min, max }) {
+    return ratio == true && unit == "%" && min >= 0 && max <= 100;
+}
+
+function isInteger(value) {
+    return value % 1 === 0;
+}
+
+function numLength(value) {
+    return value.toString().length;
+}
+
+function getInputWidth({ min, max, step }) {
+    // Calculate the width of the input field based on the length of the min, max and step values
+    const additionalStepLength =
+        isInteger(min) && isInteger(max) ? numLength(step) - 1 : 0;
+    return (
+        Math.max(numLength(min), numLength(max)) + additionalStepLength + "ch"
+    );
+}
+
+function getShowMiddle({ value, min, max, showMinLabel, showMaxLabel }) {
+    let show = between(value, min, max);
+    if (!showMinLabel) {
+        show = show || value === min;
+    }
+    if (!showMaxLabel) {
+        show = show || value === max;
+    }
+    return show;
+}
+
 const neosifier = neos((globalRegistry) => ({
     i18nRegistry: globalRegistry.get("i18n"),
+    dataSourcesDataLoader: globalRegistry.get("dataLoaders").get("DataSources"),
 }));
-
-export default neosifier(Editor);
+const connector = connect((state) => ({
+    focusedNodePath: selectors.CR.Nodes.focusedNodePathSelector(state),
+}));
+export default neosifier(connector(Editor));

@@ -12,6 +12,7 @@ This editor has some more features as the one who is already in the core:
 * Handle arrows keys (up/down) (with modifier keys for bigger steps) to increase or decrease the value via keyboard
 * Ratio mode
 * Shows reset button of `resetValue` is set
+* Support for data sources by setting a `dataSourceIdentifier`, or optionally a `dataSourceUri`.
 
 Example:
 
@@ -47,6 +48,13 @@ Example:
               4: Area
               5: City
               6: Street
+
+            # Options for dynamic values
+            dataSourceDisableCaching: false
+            dataSourceIdentifier: null
+            dataSourceUri: null
+            dataSourceAdditionalData:
+              foo: bar
 ```
 
 Of course you can localize a value. e.g. `Vendor.Package:Folder.Filename:1`
