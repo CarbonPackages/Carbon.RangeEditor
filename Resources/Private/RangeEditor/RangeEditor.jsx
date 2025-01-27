@@ -333,7 +333,7 @@ function Editor({
 
                 const newInputWidth = getInputWidth(newOptions);
                 if (newInputWidth != inputWidth) {
-                    setInputWidth(inputWidth);
+                    setInputWidth(newInputWidth);
                 }
             });
     }, [dataSourceIdentifier, dataSourceUri, dataSourceAdditionalData]);

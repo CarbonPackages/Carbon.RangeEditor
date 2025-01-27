@@ -1,9 +1,9 @@
-@property --width { syntax: "*"; inherits: false; initial-value: "*";}
+@property --width { syntax: "*"; inherits: false;}
 :root, .range-39wzrw{--range-17fcymb:var(--transition-Default);--range-1qkce6e:cubic-bezier(0.4, 0, 0.2, 1);}
 :root, .range-1ow9cle{--range-1yfsa84:var(--colors-PrimaryBlue);--range-11ai139:var(--colors-ContrastNeutral);--range-3rq551:var(--colors-ContrastBright);--range-112jqwz:var(--colors-ContrastBrightest);--range-5uow9g:var(--colors-ContrastDarkest);--range-1aufrmy:var(--colors-Warn);}
-@property --minHeight { syntax: "*"; inherits: false; initial-value: "*";}
-@property --opacity { syntax: "*"; inherits: false; initial-value: "*";}
-@property --transform { syntax: "*"; inherits: false; initial-value: "*";}
+@property --minHeight { syntax: "*"; inherits: false;}
+@property --opacity { syntax: "*"; inherits: false;}
+@property --transform { syntax: "*"; inherits: false;}
 .range-jcvozh{--color:var(--range-1yfsa84)}
 .range-orarm7{--color:var(--range-3rq551)}
 .range-11z8i2b{--thumb-opacity:.7}
