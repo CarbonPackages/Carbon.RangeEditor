@@ -259,6 +259,107 @@ function Editor({
     const [minLabel, setMinLabel] = useState(fixedOptions.minLabel);
     const [maxLabel, setMaxLabel] = useState(fixedOptions.maxLabel);
 
+    // React on changes of options, because of ClientEval or DataSource
+    function onChangedOptions(newOptions) {
+        if (
+            !valueIsClientEval(newOptions.disabled) &&
+            newOptions.disabled !== disabled
+        ) {
+            setDisabled(newOptions.disabled);
+        }
+        if (
+            !valueIsClientEval(newOptions.resetLabel) &&
+            newOptions.resetLabel !== resetLabel
+        ) {
+            setResetLabel(newOptions.resetLabel);
+        }
+        if (
+            !valueIsClientEval(newOptions.resetValue) &&
+            newOptions.resetValue !== resetValue
+        ) {
+            setResetValue(newOptions.resetValue);
+        }
+        if (
+            !valueIsClientEval(newOptions.resetIcon) &&
+            newOptions.resetIcon !== resetIcon
+        ) {
+            setResetIcon(newOptions.resetIcon);
+        }
+        if (!valueIsClientEval(newOptions.min) && newOptions.min !== min) {
+            setMin(newOptions.min);
+        }
+        if (!valueIsClientEval(newOptions.max) && newOptions.max !== max) {
+            setMax(newOptions.max);
+        }
+        if (!valueIsClientEval(newOptions.step) && newOptions.step !== step) {
+            setStep(newOptions.step);
+        }
+        if (
+            !valueIsClientEval(newOptions.valueLabels) &&
+            JSON.stringify(newOptions.valueLabels) !==
+                JSON.stringify(valueLabels)
+        ) {
+            setValueLabels(newOptions.valueLabels);
+        }
+        if (
+            !valueIsClientEval(newOptions.valueLabelsFile) &&
+            newOptions.valueLabelsFile !== valueLabelsFile
+        ) {
+            setValueLabelsFile(newOptions.valueLabelsFile);
+        }
+        if (
+            !valueIsClientEval(newOptions.showInput) &&
+            newOptions.showInput !== showInput
+        ) {
+            setShowInput(newOptions.showInput);
+        }
+        if (
+            !valueIsClientEval(newOptions.ratio) &&
+            newOptions.ratio !== ratio
+        ) {
+            setRatio(newOptions.ratio);
+        }
+        if (
+            !valueIsClientEval(newOptions.showMinLabel) &&
+            newOptions.showMinLabel !== showMinLabel
+        ) {
+            setShowMinLabel(newOptions.showMinLabel);
+        }
+        if (
+            !valueIsClientEval(newOptions.showMaxLabel) &&
+            newOptions.showMaxLabel !== showMaxLabel
+        ) {
+            setShowMaxLabel(newOptions.showMaxLabel);
+        }
+        if (
+            !valueIsClientEval(newOptions.minLabel) &&
+            newOptions.minLabel !== minLabel
+        ) {
+            setMinLabel(newOptions.minLabel);
+        }
+        if (
+            !valueIsClientEval(newOptions.maxLabel) &&
+            newOptions.maxLabel !== maxLabel
+        ) {
+            setMaxLabel(newOptions.maxLabel);
+        }
+
+        const newUnit = getTranslation(newOptions.unit);
+        if (!valueIsClientEval(newOptions.unit) && newUnit !== unit) {
+            setUnit(newUnit);
+        }
+
+        const newInputWidth = getInputWidth(newOptions);
+        if (newInputWidth !== null && newInputWidth !== inputWidth) {
+            setInputWidth(newInputWidth);
+        }
+    }
+
+    // React on changes of ClientEval values
+    useEffect(() => {
+        onChangedOptions({ ...defaultOptions, ...props.options });
+    }, [props.options]);
+
     useEffect(() => {
         const dataAsJSON = JSON.stringify({
             dataSourceIdentifier,
@@ -276,65 +377,8 @@ function Editor({
             .resolveValue(getDataLoaderOptionsForProps(props), value)
             .then((values) => {
                 setIsLoading(false);
-                const newOptions = merge(fixedOptions, values);
-                if (newOptions.disabled != disabled) {
-                    setDisabled(newOptions.disabled);
-                }
-                if (newOptions.resetLabel != resetLabel) {
-                    setResetLabel(newOptions.resetLabel);
-                }
-                if (newOptions.resetValue != resetValue) {
-                    setResetValue(newOptions.resetValue);
-                }
-                if (newOptions.resetIcon != resetIcon) {
-                    setResetIcon(newOptions.resetIcon);
-                }
-                if (newOptions.min != min) {
-                    setMin(newOptions.min);
-                }
-                if (newOptions.max != max) {
-                    setMax(newOptions.max);
-                }
-                if (newOptions.step != step) {
-                    setStep(newOptions.step);
-                }
-                if (
-                    JSON.stringify(newOptions.valueLabels) !=
-                    JSON.stringify(valueLabels)
-                ) {
-                    setValueLabels(newOptions.valueLabels);
-                }
-                if (newOptions.valueLabelsFile != valueLabelsFile) {
-                    setValueLabelsFile(newOptions.valueLabelsFile);
-                }
-                if (newOptions.showInput != showInput) {
-                    setShowInput(newOptions.showInput);
-                }
-                if (newOptions.ratio != ratio) {
-                    setRatio(newOptions.ratio);
-                }
-                if (newOptions.showMinLabel != showMinLabel) {
-                    setShowMinLabel(newOptions.showMinLabel);
-                }
-                if (newOptions.showMaxLabel != showMaxLabel) {
-                    setShowMaxLabel(newOptions.showMaxLabel);
-                }
-                if (newOptions.minLabel != minLabel) {
-                    setMinLabel(newOptions.minLabel);
-                }
-                if (newOptions.maxLabel != maxLabel) {
-                    setMaxLabel(newOptions.maxLabel);
-                }
-
-                const newUnit = getTranslation(newOptions.unit);
-                if (newUnit != unit) {
-                    setUnit(newUnit);
-                }
-
-                const newInputWidth = getInputWidth(newOptions);
-                if (newInputWidth != inputWidth) {
-                    setInputWidth(newInputWidth);
-                }
+                const newOptions = merge(defaultOptions, props.options, values);
+                onChangedOptions(newOptions);
             });
     }, [dataSourceIdentifier, dataSourceUri, dataSourceAdditionalData]);
 
@@ -665,6 +709,10 @@ function Editor({
     );
 }
 
+function valueIsClientEval(value) {
+    return typeof value === "string" && value.startsWith("ClientEval:");
+}
+
 //create your forceUpdate hook
 function useForceUpdate() {
     const [, setValue] = useState(0); // integer state
@@ -690,6 +738,13 @@ function numLength(value) {
 }
 
 function getInputWidth({ min, max, step }) {
+    if (
+        valueIsClientEval(min) ||
+        valueIsClientEval(max) ||
+        valueIsClientEval(step)
+    ) {
+        return null;
+    }
     // Calculate the width of the input field based on the length of the min, max and step values
     const additionalStepLength =
         isInteger(min) && isInteger(max) ? numLength(step) - 1 : 0;
