@@ -7,7 +7,6 @@ import { Icon } from "@neos-project/react-ui-components";
 import { merge } from "ts-deepmerge";
 import { useDebounce } from "use-debounce";
 import * as stylex from "@stylexjs/stylex";
-import { colors, transitions } from "./Tokens.stylex";
 
 const defaultOptions = {
     min: 0,
@@ -36,179 +35,6 @@ const getDataLoaderOptionsForProps = (props) => ({
     dataSourceUri: props.options.dataSourceUri,
     dataSourceAdditionalData: props.options.dataSourceAdditionalData,
     dataSourceDisableCaching: Boolean(props.options.dataSourceDisableCaching),
-});
-
-const styles = stylex.create({
-    slider: {
-        "--thumb-opacity": 0.7,
-        appearance: "none",
-        background: colors.neutral,
-        cursor: "pointer",
-        height: 25,
-        outline: "none",
-        width: "100%",
-        borderRadius: 2,
-        marginBottom: 4,
-
-        ":focus": {
-            "--thumb-opacity": 1,
-        },
-
-        "::-webkit-slider-thumb": {
-            appearance: "none",
-            background: "var(--color)",
-            borderRadius: 5,
-            boxShadow: "0 0 0 #000, 0 0 0 #0d0d0d",
-            cursor: "grab",
-            height: 20,
-            opacity: "var(--thumb-opacity)",
-            width: 20,
-            border: "none",
-            transitionProperty: "transform, opacity",
-            transitionTimingFunction: transitions.timing,
-            transitionDuration: transitions.default,
-
-            ":hover": {
-                opacity: 1,
-            },
-            ":active": {
-                cursor: "grabbing",
-                transform: "scale(1.2)",
-            },
-        },
-
-        "::-moz-range-thumb": {
-            appearance: "none",
-            background: "var(--color)",
-            borderRadius: 5,
-            boxShadow: "0 0 0 #000, 0 0 0 #0d0d0d",
-            cursor: "pointer",
-            height: 25,
-            opacity: "var(--thumb-opacity)",
-            width: 25,
-            border: "none",
-            transitionProperty: "transform, opacity",
-            transitionTimingFunction: transitions.timing,
-            transitionDuration: transitions.default,
-
-            ":hover": {
-                opacity: 1,
-            },
-            ":active": {
-                cursor: "grabbing",
-                transform: "scale(1.2)",
-            },
-        },
-    },
-    highlight: {
-        boxShadow: `0 0 0 2px ${colors.warn}`,
-    },
-    editorValue: {
-        alignItems: "center",
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
-    },
-    editorValueWithReset: {
-        marginRight: 29,
-    },
-    inputGroup: {
-        display: "flex",
-        gap: 4,
-    },
-    resetButton: {
-        background: colors.neutral,
-        border: 0,
-        borderRadius: 2,
-        color: colors.brightest,
-        cursor: "pointer",
-        height: 25,
-        width: 25,
-        padding: 0,
-        ":where(:hover,:focus)": {
-            background: colors.blue,
-            outline: "none",
-        },
-    },
-    editorValueButton: {
-        cursor: "pointer",
-        background: "none",
-        padding: 0,
-        border: 0,
-        color: "inherit",
-        borderRadius: 2,
-        minHeight: 20,
-        ":focus": {
-            outline: `2px solid ${colors.blue}`,
-            outlineOffset: 2,
-        },
-    },
-    textLeft: {
-        textAlign: "left",
-    },
-    textRight: {
-        textAlign: "right",
-    },
-    textfield: {
-        background: colors.neutral,
-        border: 0,
-        color: colors.brightest,
-        display: "flex",
-        alignItems: "center",
-        padding: "0 var(--spacing-Half)",
-        borderRadius: 2,
-        gap: 1,
-        cursor: "text",
-        ":focus-within": {
-            color: colors.darkest,
-            background: colors.brightest,
-        },
-    },
-    textfieldInput: (width) => ({
-        appearance: "none",
-        padding: 0,
-        border: 0,
-        margin: 0,
-        background: "transparent",
-        color: "inherit",
-        display: "inline-block",
-        textAlign: "center",
-        boxSizing: "content-box",
-        width: width,
-        ":focus": {
-            outline: "none",
-        },
-    }),
-    textfielInputRight: {
-        textAlign: "right",
-    },
-    noSelect: {
-        userSelect: "none",
-    },
-    textfieldGap: {
-        gap: "0.25em",
-    },
-    editorValueSingle: {
-        justifyContent: "center",
-    },
-    container: {
-        width: "100%",
-    },
-    editorDisabled: {
-        "--color": colors.bright,
-        opacity: 0.65,
-        cursor: "not-allowed",
-
-        ":where(*)>*": {
-            pointerEvents: "none",
-        },
-    },
-    editorEnabled: {
-        "--color": colors.blue,
-    },
-    dimmed: {
-        opacity: 0.7,
-    },
 });
 
 function Editor({
@@ -763,6 +589,179 @@ function getShowMiddle({ value, min, max, showMinLabel, showMaxLabel }) {
     }
     return show;
 }
+
+var styles = stylex.create({
+    slider: {
+        "--thumb-opacity": 0.7,
+        appearance: "none",
+        background: "var(--colors-ContrastNeutral)",
+        cursor: "pointer",
+        height: 25,
+        outline: "none",
+        width: "100%",
+        borderRadius: 2,
+        marginBottom: 4,
+
+        ":focus": {
+            "--thumb-opacity": 1,
+        },
+
+        "::-webkit-slider-thumb": {
+            appearance: "none",
+            background: "var(--colors-PrimaryBlue)",
+            borderRadius: 5,
+            boxShadow: "0 0 0 #000, 0 0 0 #0d0d0d",
+            cursor: "grab",
+            height: 20,
+            opacity: "var(--thumb-opacity)",
+            width: 20,
+            border: "none",
+            transitionProperty: "transform, opacity",
+            transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+            transitionDuration: "var(--transition-Default)",
+
+            ":hover": {
+                opacity: 1,
+            },
+            ":active": {
+                cursor: "grabbing",
+                transform: "scale(1.2)",
+            },
+        },
+
+        "::-moz-range-thumb": {
+            appearance: "none",
+            background: "var(--colors-PrimaryBlue)",
+            borderRadius: 5,
+            boxShadow: "0 0 0 #000, 0 0 0 #0d0d0d",
+            cursor: "pointer",
+            height: 25,
+            opacity: "var(--thumb-opacity)",
+            width: 25,
+            border: "none",
+            transitionProperty: "transform, opacity",
+            transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+            transitionDuration: "var(--transition-Default)",
+
+            ":hover": {
+                opacity: 1,
+            },
+            ":active": {
+                cursor: "grabbing",
+                transform: "scale(1.2)",
+            },
+        },
+    },
+    highlight: {
+        boxShadow: "0 0 0 2px var(--colors-Warn)",
+    },
+    editorValue: {
+        alignItems: "center",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+    },
+    editorValueWithReset: {
+        marginRight: 29,
+    },
+    inputGroup: {
+        display: "flex",
+        gap: 4,
+    },
+    resetButton: {
+        background: "var(--colors-ContrastNeutral)",
+        border: 0,
+        borderRadius: 2,
+        color: "var(--colors-ContrastBrightest)",
+        cursor: "pointer",
+        height: 25,
+        width: 25,
+        padding: 0,
+        ":where(:hover,:focus)": {
+            background: "var(--colors-PrimaryBlue)",
+            outline: "none",
+        },
+    },
+    editorValueButton: {
+        cursor: "pointer",
+        background: "none",
+        padding: 0,
+        border: 0,
+        color: "inherit",
+        borderRadius: 2,
+        minHeight: 20,
+        ":focus": {
+            outline: "2px solid var(--colors-PrimaryBlue)",
+            outlineOffset: 2,
+        },
+    },
+    textLeft: {
+        textAlign: "left",
+    },
+    textRight: {
+        textAlign: "right",
+    },
+    textfield: {
+        background: "var(--colors-ContrastNeutral)",
+        border: 0,
+        color: "var(--colors-ContrastBrightest)",
+        display: "flex",
+        alignItems: "center",
+        padding: "0 var(--spacing-Half)",
+        borderRadius: 2,
+        gap: 1,
+        cursor: "text",
+        ":focus-within": {
+            color: "var(--colors-ContrastDarkest)",
+            background: "var(--colors-ContrastBrightest)",
+        },
+    },
+    textfieldInput: (width) => ({
+        appearance: "none",
+        padding: 0,
+        border: 0,
+        margin: 0,
+        background: "transparent",
+        color: "inherit",
+        display: "inline-block",
+        textAlign: "center",
+        boxSizing: "content-box",
+        width: width,
+        ":focus": {
+            outline: "none",
+        },
+    }),
+    textfielInputRight: {
+        textAlign: "right",
+    },
+    noSelect: {
+        userSelect: "none",
+    },
+    textfieldGap: {
+        gap: "0.25em",
+    },
+    editorValueSingle: {
+        justifyContent: "center",
+    },
+    container: {
+        width: "100%",
+    },
+    editorDisabled: {
+        "--color": "var(--colors-ContrastBright)",
+        opacity: 0.65,
+        cursor: "not-allowed",
+
+        ":where(*)>*": {
+            pointerEvents: "none",
+        },
+    },
+    editorEnabled: {
+        "--color": "var(--colors-PrimaryBlue)",
+    },
+    dimmed: {
+        opacity: 0.7,
+    },
+});
 
 const neosifier = neos((globalRegistry) => ({
     i18nRegistry: globalRegistry.get("i18n"),
