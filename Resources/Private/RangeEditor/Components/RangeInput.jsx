@@ -138,7 +138,7 @@ function RangeInput({
         />
     );
 
-    if (options.resetValue === null) {
+    if (options.resetValue === undefined) {
         return inputTag;
     }
 

@@ -32,7 +32,7 @@ const defaultOptions = {
     showInput: true,
     valueLabelsFile: "",
     valueLabels: {},
-    resetValue: null,
+    resetValue: undefined,
     resetLabel: "Carbon.RangeEditor:Main:reset",
     resetIcon: "times",
     dataSourceIdentifier: null,
@@ -182,22 +182,25 @@ function Editor({
         }
     }
 
-    function changeValue(value) {
+    function changeValue(input) {
+        console.log("changeValue", input, value);
         const { min, max, minValueIsNull, maxValueIsNull, step } = options;
-        value = roundNumber(value, decimals);
-        if (isNaN(value)) {
+        input = roundNumber(input, decimals);
+        if (isNaN(input)) {
             return;
         }
-        value = Math.min(max, Math.max(min, value));
-        setState(value);
+        input = Math.min(max, Math.max(min, input));
+        setState(input);
         if (
-            (minValueIsNull && value <= min) ||
-            (maxValueIsNull && value >= max)
+            (minValueIsNull && input <= min) ||
+            (maxValueIsNull && input >= max)
         ) {
-            value = "";
+            input = "";
         }
-
-        commit(value);
+        console.log("changeValue", { input, value });
+        if (value !== input && !(value === null && input === "")) {
+            commit(input);
+        }
     }
 
     if (isLoading) {
@@ -228,7 +231,8 @@ function Editor({
             <div
                 {...stylex.props(
                     styles.editorValue,
-                    options.resetValue !== null && styles.editorValueWithReset,
+                    options.resetValue !== undefined &&
+                        styles.editorValueWithReset,
                     !options.showMinLabel &&
                         !options.showMaxLabel &&
                         styles.editorValueSingle,
