@@ -3,85 +3,7 @@ import * as stylex from "@stylexjs/stylex";
 import { Icon } from "@neos-project/react-ui-components";
 import { injectNeosProps } from "./Helper";
 
-function RangeInput({
-    id,
-    value,
-    ratioMode,
-    options,
-    currentLabel,
-    highlight,
-    i18nRegistry,
-    onChange,
-    getLabel,
-    ...rest
-}) {
-    const setId = !(!ratioMode && !currentLabel && options.showInput);
-
-    const resetLabelValues = (() => {
-        const value = options.resetValue;
-        if (options.ratioMode) {
-            return {
-                value,
-                unit: "%",
-            };
-        }
-        const label = getLabel(value);
-        if (label) {
-            return {
-                value: label,
-                unit: "",
-            };
-        }
-        return { value, unit: options.unit };
-    })();
-
-    // render input tag
-    const inputTag = (
-        <input
-            type="range"
-            id={setId ? id : null}
-            min={options.min}
-            max={options.max}
-            step={options.step}
-            disabled={options.disabled}
-            value={value.toString()}
-            onChange={({ currentTarget }) => {
-                onChange(currentTarget.value);
-            }}
-            {...rest}
-            {...stylex.props(styles.slider, highlight && styles.highlight)}
-        />
-    );
-
-    if (options.resetValue === null) {
-        return inputTag;
-    }
-
-    return (
-        <div {...stylex.props(styles.inputGroup)}>
-            {inputTag}
-            <button
-                {...stylex.props(styles.resetButton)}
-                title={i18nRegistry.translate(
-                    options.resetLabel,
-                    null,
-                    resetLabelValues,
-                )}
-                onClick={({ currentTarget }) => {
-                    currentTarget.blur();
-                    onChange(options.resetValue);
-                }}
-                disabled={options.disabled}
-            >
-                <Icon icon={options.resetIcon} />
-            </button>
-        </div>
-    );
-}
-
-export default injectNeosProps(RangeInput);
-
-var styles = stylex.create({
+const styles = stylex.create({
     slider: {
         "--thumb-opacity": 0.7,
         appearance: "none",
@@ -165,3 +87,81 @@ var styles = stylex.create({
         },
     },
 });
+
+function RangeInput({
+    id,
+    value,
+    ratioMode,
+    options,
+    currentLabel,
+    highlight,
+    i18nRegistry,
+    onChange,
+    getLabel,
+    ...rest
+}) {
+    const setId = !(!ratioMode && !currentLabel && options.showInput);
+
+    const resetLabelValues = (() => {
+        const value = options.resetValue;
+        if (options.ratioMode) {
+            return {
+                value,
+                unit: "%",
+            };
+        }
+        const label = getLabel(value);
+        if (label) {
+            return {
+                value: label,
+                unit: "",
+            };
+        }
+        return { value, unit: options.unit };
+    })();
+
+    // render input tag
+    const inputTag = (
+        <input
+            type="range"
+            id={setId ? id : null}
+            min={options.min}
+            max={options.max}
+            step={options.step}
+            disabled={options.disabled}
+            value={value.toString()}
+            onChange={({ currentTarget }) => {
+                onChange(currentTarget.value);
+            }}
+            {...rest}
+            {...stylex.props(styles.slider, highlight && styles.highlight)}
+        />
+    );
+
+    if (options.resetValue === null) {
+        return inputTag;
+    }
+
+    return (
+        <div {...stylex.props(styles.inputGroup)}>
+            {inputTag}
+            <button
+                {...stylex.props(styles.resetButton)}
+                title={i18nRegistry.translate(
+                    options.resetLabel,
+                    null,
+                    resetLabelValues,
+                )}
+                onClick={({ currentTarget }) => {
+                    currentTarget.blur();
+                    onChange(options.resetValue);
+                }}
+                disabled={options.disabled}
+            >
+                <Icon icon={options.resetIcon} />
+            </button>
+        </div>
+    );
+}
+
+export default injectNeosProps(RangeInput);

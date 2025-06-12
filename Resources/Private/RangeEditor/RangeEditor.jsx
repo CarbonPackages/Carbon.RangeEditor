@@ -40,6 +40,36 @@ const defaultOptions = {
     dataSourceAdditionalData: null,
 };
 
+const styles = stylex.create({
+    editorValue: {
+        alignItems: "center",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+    },
+    editorValueWithReset: {
+        marginRight: 29,
+    },
+    editorValueSingle: {
+        justifyContent: "center",
+    },
+    container: {
+        width: "100%",
+    },
+    editorDisabled: {
+        "--color": "var(--colors-ContrastBright)",
+        opacity: 0.65,
+        cursor: "not-allowed",
+
+        ":where(*)>*": {
+            pointerEvents: "none",
+        },
+    },
+    editorEnabled: {
+        "--color": "var(--colors-PrimaryBlue)",
+    },
+});
+
 const getDataLoaderOptions = (focusedNodePath, options) => ({
     contextNodePath: focusedNodePath,
     dataSourceIdentifier: options.dataSourceIdentifier,
@@ -168,8 +198,6 @@ function Editor({
         }
 
         commit(value);
-
-        //  forceUpdate();
     }
 
     if (isLoading) {
@@ -234,43 +262,5 @@ function Editor({
         </div>
     );
 }
-
-//create your forceUpdate hook
-// function useForceUpdate() {
-//     const [, setValue] = useState(0); // integer state
-//     return () => setValue((value) => value + 1); // update state to force render
-//     // A function that increment 👆🏻 the previous state like here
-//     // is better than directly setting `setValue(value + 1)`
-// }
-
-var styles = stylex.create({
-    editorValue: {
-        alignItems: "center",
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
-    },
-    editorValueWithReset: {
-        marginRight: 29,
-    },
-    editorValueSingle: {
-        justifyContent: "center",
-    },
-    container: {
-        width: "100%",
-    },
-    editorDisabled: {
-        "--color": "var(--colors-ContrastBright)",
-        opacity: 0.65,
-        cursor: "not-allowed",
-
-        ":where(*)>*": {
-            pointerEvents: "none",
-        },
-    },
-    editorEnabled: {
-        "--color": "var(--colors-PrimaryBlue)",
-    },
-});
 
 export default injectNeosProps(Editor, true);

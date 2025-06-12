@@ -3,6 +3,48 @@ import * as stylex from "@stylexjs/stylex";
 import ValueButton from "./ValueButton";
 import { injectNeosProps, valueIsClientEval } from "./Helper";
 
+const styles = stylex.create({
+    noSelect: {
+        userSelect: "none",
+    },
+    textfield: {
+        background: "var(--colors-ContrastNeutral)",
+        border: 0,
+        color: "var(--colors-ContrastBrightest)",
+        display: "flex",
+        alignItems: "center",
+        padding: "0 var(--spacing-Half)",
+        borderRadius: 2,
+        gap: 1,
+        cursor: "text",
+        ":focus-within": {
+            color: "var(--colors-ContrastDarkest)",
+            background: "var(--colors-ContrastBrightest)",
+        },
+    },
+    textfieldGap: {
+        gap: "0.25em",
+    },
+    textfieldInput: (width) => ({
+        appearance: "none",
+        padding: 0,
+        border: 0,
+        margin: 0,
+        background: "transparent",
+        color: "inherit",
+        display: "inline-block",
+        textAlign: "center",
+        boxSizing: "content-box",
+        width: width,
+        ":focus": {
+            outline: "none",
+        },
+    }),
+    textRight: {
+        textAlign: "right",
+    },
+});
+
 function DefaultToolbar({
     id,
     value,
@@ -149,45 +191,3 @@ function getShowMiddle({ value, min, max, showMinLabel, showMaxLabel }) {
 }
 
 export default injectNeosProps(DefaultToolbar);
-
-var styles = stylex.create({
-    noSelect: {
-        userSelect: "none",
-    },
-    textfield: {
-        background: "var(--colors-ContrastNeutral)",
-        border: 0,
-        color: "var(--colors-ContrastBrightest)",
-        display: "flex",
-        alignItems: "center",
-        padding: "0 var(--spacing-Half)",
-        borderRadius: 2,
-        gap: 1,
-        cursor: "text",
-        ":focus-within": {
-            color: "var(--colors-ContrastDarkest)",
-            background: "var(--colors-ContrastBrightest)",
-        },
-    },
-    textfieldGap: {
-        gap: "0.25em",
-    },
-    textfieldInput: (width) => ({
-        appearance: "none",
-        padding: 0,
-        border: 0,
-        margin: 0,
-        background: "transparent",
-        color: "inherit",
-        display: "inline-block",
-        textAlign: "center",
-        boxSizing: "content-box",
-        width: width,
-        ":focus": {
-            outline: "none",
-        },
-    }),
-    textRight: {
-        textAlign: "right",
-    },
-});

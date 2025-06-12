@@ -2,6 +2,29 @@ import React from "react";
 import * as stylex from "@stylexjs/stylex";
 import { injectNeosProps } from "./Helper";
 
+const styles = stylex.create({
+    editorValueButton: {
+        cursor: "pointer",
+        background: "none",
+        padding: 0,
+        border: 0,
+        color: "inherit",
+        borderRadius: 2,
+        minHeight: 20,
+        textAlign: "left",
+        ":focus": {
+            outline: "2px solid var(--colors-PrimaryBlue)",
+            outlineOffset: 2,
+        },
+    },
+    textRight: {
+        textAlign: "right",
+    },
+    dimmed: {
+        opacity: 0.7,
+    },
+});
+
 function ValueButton({
     i18nRegistry,
     title,
@@ -27,26 +50,3 @@ function ValueButton({
 }
 
 export default injectNeosProps(ValueButton);
-
-var styles = stylex.create({
-    editorValueButton: {
-        cursor: "pointer",
-        background: "none",
-        padding: 0,
-        border: 0,
-        color: "inherit",
-        borderRadius: 2,
-        minHeight: 20,
-        textAlign: "left",
-        ":focus": {
-            outline: "2px solid var(--colors-PrimaryBlue)",
-            outlineOffset: 2,
-        },
-    },
-    textRight: {
-        textAlign: "right",
-    },
-    dimmed: {
-        opacity: 0.7,
-    },
-});
