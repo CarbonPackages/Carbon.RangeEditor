@@ -4,43 +4,47 @@
 
 This editor has some more features as the one who is already in the core:
 
-* Minimal and maximal are clickable
-* It's possible to hide the input via `showInput: false`
-* The text input has a nicer UX, specially if a unit is set
-* You can set a own text for every value
-* The input field is debounced, so it is finally possible to set the value with the keypad
-* Handle arrows keys (up/down) (with modifier keys for bigger steps) to increase or decrease the value via keyboard
-* Ratio mode
-* Shows reset button of `resetValue` is set
-* Support for data sources by setting a `dataSourceIdentifier`, or optionally a `dataSourceUri`.
+- Minimal and maximal are clickable
+- It's possible to hide the input via `showInput: false`
+- The text input has a nicer UX, specially if a unit is set
+- You can set a own text for every value
+- The input field is debounced, so it is finally possible to set the value with the keypad
+- Handle arrows keys (up/down) (with modifier keys for bigger steps) to increase or decrease the value via keyboard
+- Ratio mode
+- Shows reset button of `resetValue` is set
+- Support for data sources by setting a `dataSourceIdentifier`, or optionally a `dataSourceUri`.
 
 Example:
 
 ```yaml
-'Foo.Bar:Element':
+"Foo.Bar:Element":
   properties:
     zoomLevel:
       type: integer
       ui:
         inspector:
-          editor: 'Carbon.RangeEditor/Editor'
+          editor: "Carbon.RangeEditor/Editor"
           editorOptions:
             showMinLabel: true
             showMaxLabel: true
             minLabel: null
             maxLabel: null
             showInput: true
+            # If set to true, the min value will save null and not the integer
+            minValueIsNull: true
+            # If set to true, the max value will save null and not the integer
+            maxValueIsNull: true
             # If set, it will show a reset button
             resetValue: 4
             # Sets a custom icon for the reset button, defaults to 'times'
-            resetIcon: 'undo'
+            resetIcon: "undo"
             # Set custom label to reset button, defaults to 'Carbon.RangeEditor:Main:reset'. The value and unit is also passed to the translation function
             # If the reset value has a label, the label is passed
-            resetLabel: 'Reset back to {value}{unit}'
+            resetLabel: "Reset back to {value}{unit}"
             min: 1
             max: 6
             step: 1
-            unit: ''
+            unit: ""
             valueLabels:
               1: Globe
               2: Coninent
@@ -63,23 +67,23 @@ If you have set a value label for the min or max value, you don't need to set `m
 If you work with `xlf` files, you can also ad a setting called `valueLabelsFile`:
 
 ```yaml
-'Foo.Bar:Element':
+"Foo.Bar:Element":
   properties:
     zoomLevel:
       type: integer
       ui:
         inspector:
-          editor: 'Carbon.RangeEditor/Editor'
+          editor: "Carbon.RangeEditor/Editor"
           editorOptions:
             minLabel: null
             maxLabel: null
             min: 1
             max: 6
             step: 1
-            unit: ''
-            valueLabelsFile: 'Foo.Bar:ZoomLevel'
+            unit: ""
+            valueLabelsFile: "Foo.Bar:ZoomLevel"
             valueLabels:
-              2: 'Override label from Foo.Bar:ZoomLevel:2'
+              2: "Override label from Foo.Bar:ZoomLevel:2"
 ```
 
 In that case, the plugin search for the translation value in the file `ZoomLevel.xlf` in the package `Foo.Bar`.
@@ -92,13 +96,13 @@ it will show the ratio of the two values. For example, if the value is set to `3
 the right value will show `70%`.
 
 ```yaml
-'Foo.Bar:Element':
+"Foo.Bar:Element":
   properties:
     ratio:
       type: integer
       ui:
         inspector:
-          editor: 'Carbon.RangeEditor/Editor'
+          editor: "Carbon.RangeEditor/Editor"
           editorOptions:
             ratio: true
             min: 25

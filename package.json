@@ -29,14 +29,14 @@
   "devDependencies": {
     "@neos-project/neos-ui-extensibility": "~8.3.11",
     "@stylexjs/esbuild-plugin": "^0.11.1",
-    "esbuild": "^0.25.2",
+    "esbuild": "^0.25.5",
     "prettier": "^3.5.3"
   },
   "dependencies": {
-    "@stylexjs/stylex": "^0.11.1",
+    "@stylexjs/stylex": "^0.13.1",
     "carbon-neos-loadinganimation": "^1.2.0",
-    "ts-deepmerge": "^7.0.2",
-    "use-debounce": "^10.0.4"
+    "ts-deepmerge": "^7.0.3",
+    "use-debounce": "^10.0.5"
   },
   "peerDependencies": {
     "@neos-project/neos-ui-extensibility": "^8.3.0 || ^9.0.0"
