@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
     injectNeosProps,
     getDeciamls,
@@ -91,23 +91,57 @@ function Editor({
     focusedNodePath,
     ...props
 }) {
-    const [options, setOptions] = useState({
-        ...defaultOptions,
-        ...props.options,
-    });
     const hasDataSource = !!(
-        options.dataSourceIdentifier || options.dataSourceUri
+        props.options.dataSourceIdentifier || props.options.dataSourceUri
     );
-    const [optionsAsJSON, setOptionsAsJSON] = useState(JSON.stringify(options));
-    const [state, setState] = useState(() =>
-        getNumberFromValue(value, options),
-    );
+
+    const [options, setOptions] = useState({});
+    const [optionsAsJSON, setOptionsAsJSON] = useState("");
+    const [state, setState] = useState(0);
     const [debouncedState] = useDebounce(state, 500);
+    const [ratioMode, setRatioMode] = useDebounce(false);
+    const [decimals, setDecimals] = useState(0);
+    const getLabel = useCallback(
+        (value, ignoreShowInput = false) => {
+            return getLabelToTranslate(
+                i18nRegistry,
+                options,
+                value,
+                ignoreShowInput,
+            );
+        },
+        [i18nRegistry, options],
+    );
+
+    useEffect(() => {
+        const newOptions = {
+            ...defaultOptions,
+            ...props.options,
+        };
+        const newOptionsAsJSON = JSON.stringify(newOptions);
+        const clientEval =
+            newOptionsAsJSON?.includes("ClientEval:") ||
+            newOptionsAsJSON?.includes("ItemEval:");
+
+        if (!clientEval && optionsAsJSON !== newOptionsAsJSON) {
+            setOptions(newOptions);
+            setOptionsAsJSON(newOptionsAsJSON);
+            setState(getNumberFromValue(value, newOptions));
+
+            const ratio = isRatioMode(newOptions);
+            if (ratioMode !== ratio) {
+                setRatioMode(ratio);
+            }
+
+            const newDecimals = getDeciamls(newOptions.step);
+            if (decimals !== newDecimals) {
+                setDecimals(newDecimals);
+            }
+        }
+    }, [props.options]);
 
     const [isLoading, setIsLoading] = useState(hasDataSource);
-    const ratioMode = isRatioMode(options);
     const currentLabel = getLabel(value);
-    const decimals = getDeciamls(options.step);
 
     useEffect(() => {
         if (!hasDataSource) {
@@ -152,15 +186,6 @@ function Editor({
         }
     }, [debouncedState]);
 
-    function getLabel(value, ignoreShowInput = false) {
-        return getLabelToTranslate(
-            i18nRegistry,
-            options,
-            value,
-            ignoreShowInput,
-        );
-    }
-
     function handleKeyDown(event) {
         if (typeof onKeyDown === "function") {
             onKeyDown(event);
@@ -183,7 +208,6 @@ function Editor({
     }
 
     function changeValue(input) {
-        console.log("changeValue", input, value);
         const { min, max, minValueIsNull, maxValueIsNull, step } = options;
         input = roundNumber(input, decimals);
         if (isNaN(input)) {
@@ -197,13 +221,13 @@ function Editor({
         ) {
             input = "";
         }
-        console.log("changeValue", { input, value });
+
         if (value !== input && !(value === null && input === "")) {
             commit(input);
         }
     }
 
-    if (isLoading) {
+    if (isLoading || Object.values(options).length === 0) {
         return (
             <Loading isLoading={true} title="Carbon.RangeEditor:Main:loading" />
         );
