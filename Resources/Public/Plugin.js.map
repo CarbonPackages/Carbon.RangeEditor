@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../../node_modules/.pnpm/@neos-project+neos-ui-extensibility@8.3.14/node_modules/@neos-project/neos-ui-extensibility/src/index.ts", "../Private/RangeEditor/manifest.js"],
+  "sourcesContent": [null, "import manifest from \"@neos-project/neos-ui-extensibility\";\nimport React, { Suspense, lazy } from \"react\";\n\nconst LazyEditor = lazy(() => import(\"./RangeEditor\"));\n\nconst component = (props) => (\n    <Suspense fallback=\"\">\n        <LazyEditor {...props} />\n    </Suspense>\n);\n\nmanifest(\"Carbon.RangeEditor:Editor\", {}, (globalRegistry) => {\n    const editorsRegistry = globalRegistry.get(\"inspector\").get(\"editors\");\n\n    editorsRegistry.set(\"Carbon.RangeEditor/Editor\", {\n        component,\n    });\n});\n"],
+  "mappings": ";;;;;;;;AACA;AAMA,IAAA,eAAe,oBAAoB,UAAU;;;ACN7C,mBAAsC;AAEtC,IAAM,iBAAa,mBAAK,MAAM,OAAO,kBAAe,CAAC;AAErD,IAAM,YAAY,CAAC,UACf,6BAAAA,QAAA,cAAC,yBAAS,UAAS,MACf,6BAAAA,QAAA,cAAC,cAAY,GAAG,OAAO,CAC3B;AAGJ,aAAS,6BAA6B,CAAC,GAAG,CAAC,mBAAmB;AAC1D,QAAM,kBAAkB,eAAe,IAAI,WAAW,EAAE,IAAI,SAAS;AAErE,kBAAgB,IAAI,6BAA6B;AAAA,IAC7C;AAAA,EACJ,CAAC;AACL,CAAC;",
+  "names": ["React"]
+}

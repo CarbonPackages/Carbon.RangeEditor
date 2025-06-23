@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../../node_modules/.pnpm/@neos-project+neos-ui-extensibility@8.3.14/node_modules/@neos-project/neos-ui-extensibility/src/readFromConsumerApi.ts", "../../../../../node_modules/.pnpm/@neos-project+neos-ui-extensibility@8.3.14/node_modules/@neos-project/neos-ui-extensibility/src/shims/vendor/react/index.js"],
+  "sourcesContent": [null, null],
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAAc,SAAP,oBAAqC,KAAW;AACnD,SAAO,IAAI,SAAe;AACtB,QAAK,OAAe,qBAAqB,KAAM,OAAe,qBAAqB,EAAE,IAAI,GAAG,EAAE,GAAG;AAC7F,aAAQ,OAAe,qBAAqB,EAAE,IAAI,GAAG,EAAE,EAAE,GAAG,IAAI;;AAGpE,UAAM,IAAI,MAAM,8EAA+E;EACnG;AACJ;AARA;;;;;;ACAA;;;AAEA,WAAO,UAAU,oBAAoB,QAAQ,EAAC,EAAG;;;",
+  "names": []
+}

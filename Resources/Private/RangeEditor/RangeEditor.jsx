@@ -72,10 +72,10 @@ const styles = stylex.create({
 
 const getDataLoaderOptions = (focusedNodePath, options) => ({
     contextNodePath: focusedNodePath,
-    dataSourceIdentifier: options.dataSourceIdentifier,
-    dataSourceUri: options.dataSourceUri,
-    dataSourceAdditionalData: options.dataSourceAdditionalData,
-    dataSourceDisableCaching: Boolean(options.dataSourceDisableCaching),
+    dataSourceIdentifier: options?.dataSourceIdentifier || null,
+    dataSourceUri: options?.dataSourceUri || null,
+    dataSourceAdditionalData: options?.dataSourceAdditionalData || {},
+    dataSourceDisableCaching: Boolean(options?.dataSourceDisableCaching),
 });
 
 function Editor({
@@ -92,7 +92,7 @@ function Editor({
     ...props
 }) {
     const hasDataSource = !!(
-        props.options.dataSourceIdentifier || props.options.dataSourceUri
+        props.options?.dataSourceIdentifier || props.options?.dataSourceUri
     );
 
     const [options, setOptions] = useState({});
@@ -144,7 +144,7 @@ function Editor({
     const currentLabel = getLabel(value);
 
     useEffect(() => {
-        if (!hasDataSource) {
+        if (!(options?.dataSourceIdentifier || options?.dataSourceUri)) {
             return;
         }
         // Load options from data source

@@ -1,7 +1,7 @@
-@property --width { syntax: "*"; inherits: false;}
 @property --minHeight { syntax: "*"; inherits: false;}
 @property --opacity { syntax: "*"; inherits: false;}
 @property --transform { syntax: "*"; inherits: false;}
+@property --width { syntax: "*"; inherits: false;}
 .range-ormw3b{--color:var(--colors-ContrastBright)}
 .range-1n0gk3w{--color:var(--colors-PrimaryBlue)}
 .range-11z8i2b{--thumb-opacity:.7}
