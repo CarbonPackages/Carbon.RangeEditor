@@ -7,6 +7,10 @@ const styles = stylex.create({
     noSelect: {
         userSelect: "none",
     },
+    unit: {
+        userSelect: "none",
+        whiteSpace: "break-spaces",
+    },
     textfield: {
         background: "var(--colors-ContrastNeutral)",
         border: 0,
@@ -121,7 +125,7 @@ function DefaultToolbar({
                         )}
                     />
                     {options.unit && (
-                        <span {...stylex.props(styles.noSelect)}>
+                        <span {...stylex.props(styles.unit)}>
                             {i18nRegistry.translate(
                                 options.unit.toString().trim(),
                             )}
@@ -130,7 +134,7 @@ function DefaultToolbar({
                 </span>
             )}
             {!currentLabel && showMiddle && !options.showInput && (
-                <span {...stylex.props(styles.noSelect)}>
+                <span {...stylex.props(styles.unit)}>
                     {value.toString()}
                     {i18nRegistry.translate(options.unit)}
                 </span>
