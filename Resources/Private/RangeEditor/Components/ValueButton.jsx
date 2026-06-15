@@ -5,7 +5,7 @@ import { injectNeosProps } from "./Helper";
 const styles = stylex.create({
     editorValueButton: {
         cursor: "pointer",
-        backgroundColor: "none",
+        backgroundColor: "transparent",
         padding: 0,
         borderWidth: 0,
         color: "inherit",
@@ -13,7 +13,9 @@ const styles = stylex.create({
         minHeight: 20,
         textAlign: "left",
         ":focus": {
-            outline: "2px solid var(--colors-PrimaryBlue)",
+            outlineWidth: 2,
+            outlineStyle: "solid",
+            outlineColor: "var(--colors-PrimaryBlue)",
             outlineOffset: 2,
         },
     },
@@ -31,6 +33,8 @@ function ValueButton({
     textRight = false,
     dimmed = false,
     children,
+    neos,
+    dataSourcesDataLoader,
     ...rest
 }) {
     return (

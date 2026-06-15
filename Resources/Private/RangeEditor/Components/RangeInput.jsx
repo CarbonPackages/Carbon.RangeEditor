@@ -98,6 +98,8 @@ function RangeInput({
     i18nRegistry,
     onChange,
     getLabel,
+    neos,
+    dataSourcesDataLoader,
     ...rest
 }) {
     const setId = !(!ratioMode && !currentLabel && options.showInput);
