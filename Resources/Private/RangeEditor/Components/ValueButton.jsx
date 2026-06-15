@@ -5,9 +5,9 @@ import { injectNeosProps } from "./Helper";
 const styles = stylex.create({
     editorValueButton: {
         cursor: "pointer",
-        background: "none",
+        backgroundColor: "none",
         padding: 0,
-        border: 0,
+        borderWidth: 0,
         color: "inherit",
         borderRadius: 2,
         minHeight: 20,

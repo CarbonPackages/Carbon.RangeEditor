@@ -1,45 +1,45 @@
 {
-  "name": "carbon-neos-range-editor",
-  "description": "Range editor for Neos CMS",
-  "license": "GPL-3.0",
-  "author": "Jon Uhlmann",
-  "type": "module",
-  "main": "Resources/Private/RangeEditor/RangeEditor.jsx",
-  "module": "Resources/Private/RangeEditor/RangeEditor.jsx",
-  "exports": {
-    ".": {
-      "require": null,
-      "import": "./Resources/Private/RangeEditor/RangeEditor.jsx"
-    }
-  },
-  "files": [
-    "Resources/Private/RangeEditor",
-    "!Resources/Private/RangeEditor/manifest.js"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/CarbonPackages/Carbon.RangeEditor.git"
-  },
-  "scripts": {
-    "build": "NODE_OPTIONS=--disable-warning=ExperimentalWarning node build.mjs --production",
-    "watch": "NODE_OPTIONS=--disable-warning=ExperimentalWarning node build.mjs --watch",
-    "dev": "NODE_OPTIONS=--disable-warning=ExperimentalWarning node build.mjs --dev",
-    "pipeline": "pnpm install --silent;pnpm build"
-  },
-  "devDependencies": {
-    "@neos-project/neos-ui-extensibility": "~8.3.19",
-    "@stylexjs/esbuild-plugin": "^0.11.1",
-    "esbuild": "^0.28.1",
-    "prettier": "^3.8.4"
-  },
-  "dependencies": {
-    "@stylexjs/stylex": "^0.13.1",
-    "carbon-neos-loadinganimation": "^1.2.0",
-    "ts-deepmerge": "^8.0.0",
-    "use-debounce": "^10.1.1"
-  },
-  "peerDependencies": {
-    "@neos-project/neos-ui-extensibility": "^8.3.0 || ^9.0.0"
-  },
-  "packageManager": "pnpm@11.7.0+sha512.19cc852c120c7125760f2443ee6be0ca5b40f9f50598de1a09a1f177503e010e57c23c77646e01e761de59bf874fb22a3398c33ab9691fc13eb946b6f0f4d620"
+    "name": "carbon-neos-range-editor",
+    "description": "Range editor for Neos CMS",
+    "license": "GPL-3.0",
+    "author": "Jon Uhlmann",
+    "type": "module",
+    "main": "Resources/Private/RangeEditor/RangeEditor.jsx",
+    "module": "Resources/Private/RangeEditor/RangeEditor.jsx",
+    "exports": {
+        ".": {
+            "require": null,
+            "import": "./Resources/Private/RangeEditor/RangeEditor.jsx"
+        }
+    },
+    "files": [
+        "Resources/Private/RangeEditor",
+        "!Resources/Private/RangeEditor/manifest.js"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/CarbonPackages/Carbon.RangeEditor.git"
+    },
+    "scripts": {
+        "build": "NODE_OPTIONS=--disable-warning=ExperimentalWarning node build.mjs --production",
+        "watch": "NODE_OPTIONS=--disable-warning=ExperimentalWarning node build.mjs --watch",
+        "dev": "NODE_OPTIONS=--disable-warning=ExperimentalWarning node build.mjs --dev",
+        "pipeline": "pnpm install --silent;pnpm build"
+    },
+    "devDependencies": {
+        "@neos-project/neos-ui-extensibility": "~8.3.19",
+        "@stylexjs/unplugin": "^0.18.3",
+        "esbuild": "^0.28.1",
+        "prettier": "^3.8.4"
+    },
+    "dependencies": {
+        "@stylexjs/stylex": "^0.18.3",
+        "carbon-neos-loadinganimation": "^1.2.0",
+        "ts-deepmerge": "^8.0.0",
+        "use-debounce": "^10.1.1"
+    },
+    "peerDependencies": {
+        "@neos-project/neos-ui-extensibility": "^8.3.0 || ^9.0.0"
+    },
+    "packageManager": "pnpm@11.7.0+sha512.19cc852c120c7125760f2443ee6be0ca5b40f9f50598de1a09a1f177503e010e57c23c77646e01e761de59bf874fb22a3398c33ab9691fc13eb946b6f0f4d620"
 }

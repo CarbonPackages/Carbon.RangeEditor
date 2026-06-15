@@ -7,7 +7,7 @@ const styles = stylex.create({
     slider: {
         "--thumb-opacity": 0.7,
         appearance: "none",
-        background: "var(--colors-ContrastNeutral)",
+        backgroundColor: "var(--colors-ContrastNeutral)",
         cursor: "pointer",
         height: 25,
         outline: "none",
@@ -21,14 +21,14 @@ const styles = stylex.create({
 
         "::-webkit-slider-thumb": {
             appearance: "none",
-            background: "var(--colors-PrimaryBlue)",
+            backgroundColor: "var(--colors-PrimaryBlue)",
             borderRadius: 5,
             boxShadow: "0 0 0 #000, 0 0 0 #0d0d0d",
             cursor: "grab",
             height: 20,
             opacity: "var(--thumb-opacity)",
             width: 20,
-            border: "none",
+            borderWidth: 0,
             transitionProperty: "transform, opacity",
             transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
             transitionDuration: "var(--transition-Default)",
@@ -44,14 +44,14 @@ const styles = stylex.create({
 
         "::-moz-range-thumb": {
             appearance: "none",
-            background: "var(--colors-PrimaryBlue)",
+            backgroundColor: "var(--colors-PrimaryBlue)",
             borderRadius: 5,
             boxShadow: "0 0 0 #000, 0 0 0 #0d0d0d",
             cursor: "pointer",
             height: 25,
             opacity: "var(--thumb-opacity)",
             width: 25,
-            border: "none",
+            borderWidth: 0,
             transitionProperty: "transform, opacity",
             transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
             transitionDuration: "var(--transition-Default)",
@@ -73,8 +73,8 @@ const styles = stylex.create({
         gap: 4,
     },
     resetButton: {
-        background: "var(--colors-ContrastNeutral)",
-        border: 0,
+        backgroundColor: "var(--colors-ContrastNeutral)",
+        borderWidth: 0,
         borderRadius: 2,
         color: "var(--colors-ContrastBrightest)",
         cursor: "pointer",
@@ -82,7 +82,7 @@ const styles = stylex.create({
         width: 25,
         padding: 0,
         ":where(:hover,:focus)": {
-            background: "var(--colors-PrimaryBlue)",
+            backgroundColor: "var(--colors-PrimaryBlue)",
             outline: "none",
         },
     },

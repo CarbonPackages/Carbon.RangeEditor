@@ -9,7 +9,7 @@ Neos:
               type: 'module'
         stylesheets:
           Carbon.RangeEditor:Plugin:
-            resource: resource://Carbon.RangeEditor/Public/Plugin.css
+            resource: resource://Carbon.RangeEditor/Public/stylex.css
     userInterface:
       translation:
         autoInclude:

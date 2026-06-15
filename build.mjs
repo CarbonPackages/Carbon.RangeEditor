@@ -1,10 +1,7 @@
 import esbuild from "esbuild";
 import extensibilityMap from "@neos-project/neos-ui-extensibility/extensibilityMap.json" with { type: "json" };
-import stylexPlugin from "@stylexjs/esbuild-plugin";
-import path from "path";
-import { fileURLToPath } from "url";
+import stylex from "@stylexjs/unplugin";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const watch = process.argv.includes("--watch");
 const dev = process.argv.includes("--dev");
 const minify = !dev && !watch;
@@ -16,27 +13,24 @@ const options = {
     minify,
     sourcemap: watch,
     target: "es2020",
-    legalComments: "none",
     format: "esm",
     splitting: true,
-    entryPoints: { Plugin: "Resources/Private/RangeEditor/manifest.js",
-        RangeEditor: "Resources/Private/RangeEditor/RangeEditor.jsx",
-     },
+    legalComments: "none",
+    entryPoints: ["Resources/Private/RangeEditor/*.jsx"],
     loader: {
         ".js": "jsx",
     },
     outdir: "Resources/Public",
     alias: extensibilityMap,
+    metafile: true,
     plugins: [
-        stylexPlugin({
-            classNamePrefix: "range-",
+        stylex.esbuild({
             useCSSLayers: false,
-            dev: false,
-            generatedCSSFileName: path.resolve(
-                __dirname,
-                "Resources/Public/Plugin.css",
-            ),
-            stylexImports: ["@stylexjs/stylex"],
+            classNamePrefix: "range-",
+            dev,
+            lightningcssOptions: {
+                minify,
+            },
         }),
     ],
 };
